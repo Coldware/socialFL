@@ -1,7 +1,7 @@
 from flask import request, session, Blueprint, json
 
 ident = Blueprint('ident', __name__)
-from base import db, Usuario, Pagina
+from base import db, Usuario#, Pagina
 
 
 @ident.route('/ident/AIdentificar', methods=['POST'])
@@ -10,7 +10,7 @@ def AIdentificar():
     params = request.get_json()
     results = [
         {'label':'/VPrincipal', 'msg':['Bienvenido usuario'], 
-        "actor":"duenoProducto"}, 
+        "actor":params['usuario']}, 
         {'label':'/VLogin', 'msg':['Datos de identificación incorrectos']}, ]
     res = results[0]
     #Action code goes here, res should be a list with a label and a message
@@ -36,6 +36,7 @@ def AIdentificar():
             session.pop("actor", None)
         else:
             session['actor'] = res['actor']
+            print("session: "+str(session))
     return json.dumps(res)
 
 
@@ -76,14 +77,15 @@ def ARegistrar():
     return json.dumps(res)
 
 def VerificarCuentaExiste(login):
+    #To show every user in the data base
     usuarios = Usuario.query.all()
     for usr in usuarios:
         print(usr)
     
-    print("Login: " + login)
+    print("Login: " + login)#To show who's trying to log in or register
     
     usuario = Usuario.query.filter_by(login=login).first()
-    print(usuario)
+    print(usuario)#To show if the user exists or not
     if usuario==None:
         return False
     return True
@@ -96,6 +98,8 @@ def VLogin():
     res = {}
     if "actor" in session:
         res['actor']=session['actor']
+        session.pop("actor")
+    print(session)
     #Action code goes here, res should be a JSON structure
 
 
@@ -109,9 +113,10 @@ def VPrincipal():
     res = {}
     if "actor" in session:
         res['actor']=session['actor']
+        usuario = Usuario.query.filter_by(login=res['actor']).first()
     #Action code goes here, res should be a JSON structure
 
-    res['idUsuario'] = 'Leo'
+    res['idUsuario'] = usuario.login
 
     #Action code ends here
     return json.dumps(res)
