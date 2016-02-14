@@ -85,3 +85,8 @@ conda install flask
 conda install --channel https://conda.anaconda.org/ziff flask-script
 conda install --channel https://conda.anaconda.org/hugo flask-sqlalchemy
 (Flask-Migrate no está empaquetado para anaconda)
+
+Para añadir cambios --> git add .
+Para registrar los cambios a guardar en el repo --> git commit -m "COMMENTS ABOUT THE COMMIT"
+Para realizar los cambios en el repo --> git push -u origin master
+Para verificar los cambios que hay añadidos al momento --> git status
