@@ -11,7 +11,8 @@ def AIdentificar():
     #POST/PUT parameters
     params = request.get_json()
     results = [
-        {'label':'/VPrincipal', 'msg':'Bienvenido '+params['usuario']+'!', "actor":params['usuario']}, 
+        {'label':'/VPrincipal', 'msg':'Bienvenido '+params['usuario']+'!', 
+        "actor":params['usuario']}, 
         {'label':'/VLogin', 'msg':'La clave introducida es incorrecta.'},
         {'label':'/VLogin', 'msg':'El nombre de usuario introducido es incorrecto.'}
     ]

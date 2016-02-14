@@ -28,7 +28,7 @@ def AModificarPagina():
         db.session.add(pagina)
         db.session.commit()
     except:
-        print("Already in DB")
+        res['msg'] = 'Ya existe el titulo en la base de datos.'
     db.session.close()
     
     #Action code ends here
