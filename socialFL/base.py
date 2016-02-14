@@ -1,5 +1,5 @@
 from flask import Flask, session
-from flask.ext.script import Manager, Server
+from flask.ext.script import Manager, Server, prompt_bool
 from random import SystemRandom
 from datetime import timedelta
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -24,11 +24,21 @@ def make_session_permanent():
 def root():
     return app.send_static_file('index.html')
 
+@manager.command
+def initdb():
+    db.create_all()
+    print("La base de datos ha sido inicializada.")
+    
+@manager.command
+def dropdb():
+    if prompt_bool("Estas seguro que quieres borrar toda la data?"):
+        db.drop_all()
+        print("Base de datos borrada.")
+
 #Application code starts here
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'apl.db')
-app.config['SQLAlchemy_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 manager.add_command('db', MigrateCommand)
@@ -54,8 +64,8 @@ class Pagina(db.Model):
     titulo = db.Column(db.String(20), index=True, unique=True)
     contenido = db.Column(db.Text)
     idUsuario = db.Column(db.Integer, db.ForeignKey('usuario.idUsuario'))
-    usuario = db.relationship('Usuario',
-        backref=db.backref('pagina', lazy='dynamic'))
+    usuario = db.relationship('Usuario', backref=db.backref('pagina', lazy='dynamic'))
+
     
     def __init__(self, titulo, contenido, usuario):
         self.titulo = titulo

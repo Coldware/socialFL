@@ -25,6 +25,7 @@ def AModificarPagina():
     ) #Create the table in the DB
     
     try: #If user is not in the DB it will register
+        res['idUsuario'] = usuario.login
         db.session.add(pagina)
         db.session.commit()
     except:
