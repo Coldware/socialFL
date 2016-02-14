@@ -31,7 +31,6 @@ def AIdentificar():
             session.pop("actor", None)
         else:
             session['actor'] = res['actor']
-            print("session: "+str(session))
     return json.dumps(res)
 
 
