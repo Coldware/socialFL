@@ -1,7 +1,7 @@
 from flask import request, session, Blueprint, json
 
 ident = Blueprint('ident', __name__)
-from base import db, Usuario#, Pagina
+from base import db, Usuario
 
 
 
@@ -97,9 +97,7 @@ def VPrincipal():
     
     try:
         usuario = Usuario.query.filter_by(login=res['actor']).first()
-        print(usuario)
         res['idUsuario'] = usuario.login
-        print(res)
     except:
         pass
 
