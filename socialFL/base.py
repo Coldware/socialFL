@@ -48,6 +48,22 @@ class Usuario(db.Model):
     def __repr__(self):
         return '<USUARIO --> id:{} login:{}>'.format(self.idUsuario, self.login)
 
+class Pagina(db.Model):
+    idPagina = db.Column(db.Integer, primary_key=True)
+    titulo = db.Column(db.String(20), index=True, unique=True)
+    contenido = db.Column(db.Text)
+    idUsuario = db.Column(db.Integer, db.ForeignKey('usuario.idUsuario'))
+    usuario = db.relationship('Usuario',
+        backref=db.backref('pagina', lazy='dynamic'))
+    
+    def __init__(self, titulo, contenido, usuario):
+        self.titulo = titulo
+        self.contenido = contenido
+        self.usuario = usuario
+    
+    def __repr__(self):
+        return '<PAGINA --> id:{} titulo:{} usuario:{}>'.format(self.idPagina, self.titulo, self.usuario.login)
+
 #Application code ends here
 
 from app.socal.ident import ident

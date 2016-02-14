@@ -93,10 +93,15 @@ def VPrincipal():
     res = {}
     if "actor" in session:
         res['actor']=session['actor']
-        usuario = Usuario.query.filter_by(login=res['actor']).first()
     #Action code goes here, res should be a JSON structure
-
-    res['idUsuario'] = usuario.login
+    
+    try:
+        usuario = Usuario.query.filter_by(login=res['actor']).first()
+        print(usuario)
+        res['idUsuario'] = usuario.login
+        print(res)
+    except:
+        pass
 
     #Action code ends here
     return json.dumps(res)
