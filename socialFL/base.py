@@ -6,6 +6,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.migrate import Migrate, MigrateCommand
 import os
 
+#CONFIGURE MANAGER
 app = Flask(__name__, static_url_path='')
 manager = Manager(app)
 manager.add_command("runserver", Server(
@@ -13,16 +14,6 @@ manager.add_command("runserver", Server(
     use_reloader = True,
     host = '0.0.0.0', port = 8080)
 )
-
-@app.before_request
-def make_session_permanent():
-    session.permanent = True
-    app.permanent_session_lifetime = timedelta(minutes=45)
-    session.modified = True
-
-@app.route('/')
-def root():
-    return app.send_static_file('index.html')
 
 @manager.command
 def initdb():
@@ -35,9 +26,20 @@ def dropdb():
         db.drop_all()
         print("Base de datos borrada.")
 
+@app.before_request
+def make_session_permanent():
+    session.permanent = True
+    app.permanent_session_lifetime = timedelta(minutes=45)
+    session.modified = True
+
+@app.route('/')
+def root():
+    return app.send_static_file('index.html')
+
 #Application code starts here
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+#CONFIGURE DATA BASE
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'apl.db')
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
