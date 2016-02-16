@@ -1,5 +1,5 @@
-from flask import Flask, session
-from flask.ext.script import Manager, Server, prompt_bool
+
+from Flask.ext.script import Manager, Server, prompt_bool
 from random import SystemRandom
 from datetime import timedelta
 from flask.ext.sqlalchemy import SQLAlchemy
