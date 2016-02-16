@@ -1,5 +1,4 @@
 from flask import request, session, Blueprint, json
-from flask.ext.login import login_required
 
 ident = Blueprint('ident', __name__)
 from base import db, Usuario
