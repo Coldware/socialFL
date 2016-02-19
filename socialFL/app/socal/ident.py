@@ -11,10 +11,9 @@ def AIdentificar():
     #POST/PUT parameters
     params = request.get_json()
     results = [
-        {'label':'/VPrincipal', 'msg':'Bienvenido '+params['usuario']+'!', 
+        {'label':'/VPrincipal', 'msg':'¡Bienvenido '+params['usuario']+'!', 
         "actor":params['usuario']}, 
-        {'label':'/VLogin', 'msg':'La clave introducida es incorrecta.'},
-        {'label':'/VLogin', 'msg':'El nombre de usuario introducido es incorrecto.'}
+        {'label':'/VLogin', 'msg':'Datos introducidos incorrectos.'},
     ]
     res = results[0]
     #Action code goes here, res should be a list with a label and a message
@@ -24,7 +23,7 @@ def AIdentificar():
         if usuario.clave!=params['clave']:
             res = results[1]
     except:
-        res = results[2]
+        res = results[1]
 
     #Action code ends here
     if "actor" in res:
