@@ -45,13 +45,72 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 manager.add_command('db', MigrateCommand)
 
+
+
+
+user_to_user = db.Table('user_to_user',
+    db.Column("follower_id", db.Integer, db.ForeignKey("usuario.id")),
+    db.Column("followed_id", db.Integer, db.ForeignKey("usuario.id"))
+)
+
+member_to_group = db.Table('member_to_group',
+    db.Column('member_id', db.Integer, db.ForeignKey('usuario.id')),
+    db.Column('group_id', db.Integer, db.ForeignKey('grupo.id'))
+)
+
+class Grupo(db.Model):
+    __tablename__ = 'grupo'
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(20))
+    miembros = db.relationship("Usuario",
+                    secondary=member_to_group,
+                    primaryjoin=id==member_to_group.c.member_id,
+                    secondaryjoin=id==member_to_group.c.group_id,
+                    backref=db.backref("grupo", lazy='dynamic'),
+                    lazy='dynamic'
+                    )
+    duenio = db.relationship("Usuario", uselist=False,
+    backref=db.backref("duenioGrupo", lazy='dynamic'), lazy='dynamic'
+    )
+    
+    def __init__(self, nombre):
+        self.nombre = nombre
+    
+    def __repr__(self):
+        return '<GRUPO --> id:{} nombre:{}>'.format(self.id, self.nombre)
+        
+    def addMember(self, miembro):
+        if not self.esMiembro(miembro):
+            self.miembros.append(miembro)
+            return self
+    
+    def delMember(self, miembro):
+        if self.esMiembro(miembro):
+            self.miembros.remove(miembro)
+            return self
+    
+    def esMiembro(self, miembro):
+        return self.miembros.filter(member_to_group.c.member_id == miembro.id).count() > 0
+
+
 class Usuario(db.Model):
-    idUsuario = db.Column(db.Integer, primary_key=True)
+    __tablename__ = 'usuario'
+    id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(15))
     login = db.Column(db.String(15), index=True, unique=True)
     clave = db.Column(db.String(15))
     correo = db.Column(db.String(20))
-    
+    pagina = db.relationship('Pagina', backref='usuario', lazy='dynamic')
+    grupo_id = db.Column(db.Integer, db.ForeignKey('grupo.id'))
+    duenioGrupo_id = db.Column(db.Integer, db.ForeignKey('grupo.id'))
+    contacto = db.relationship("Usuario",
+                    secondary=user_to_user,
+                    primaryjoin=id==user_to_user.c.follower_id,
+                    secondaryjoin=id==user_to_user.c.followed_id,
+                    backref=db.backref("followed_by", lazy='dynamic'),
+                    lazy='dynamic'
+    )
+
     def __init__(self, nombre, login, clave, correo):
         self.nombre = nombre
         self.login = login
@@ -59,23 +118,57 @@ class Usuario(db.Model):
         self.correo = correo
     
     def __repr__(self):
-        return '<USUARIO --> id:{} login:{}>'.format(self.idUsuario, self.login)
+        return '<USUARIO --> id:{} login:{}>'.format(self.id, self.login)
+    
+    def addPage(self, pagina):
+        self.pagina.append(pagina)
+    
+    def delPage(self, pagina):
+        self.pagina.remove(pagina)
+    
+    def addContact(self, usuario):
+        if not self.esContacto(usuario):
+            self.contacto.append(usuario)
+            return self
+    
+    def delContact(self, usuario):
+        if self.esContacto(usuario):
+            self.contacto.remove(usuario)
+            return self
+    
+    def esContacto(self, usuario):
+        return self.contacto.filter(user_to_user.c.followed_id == usuario.id).count() > 0
 
 class Pagina(db.Model):
-    idPagina = db.Column(db.Integer, primary_key=True)
+    __tablename__ = 'pagina'
+    id = db.Column(db.Integer, primary_key=True)
     titulo = db.Column(db.String(20), index=True, unique=True)
     contenido = db.Column(db.Text)
-    idUsuario = db.Column(db.Integer, db.ForeignKey('usuario.idUsuario'))
-    usuario = db.relationship('Usuario', backref=db.backref('pagina', lazy='dynamic'))
+    pagina_id = db.Column(db.Integer, db.ForeignKey('usuario.id'))
 
-    
     def __init__(self, titulo, contenido, usuario):
         self.titulo = titulo
         self.contenido = contenido
         self.usuario = usuario
     
     def __repr__(self):
-        return '<PAGINA --> id:{} titulo:{} usuario:{}>'.format(self.idPagina, self.titulo, self.usuario.login)
+        return '<PAGINA --> id:{} titulo:{} usuario:{}>'.format(self.id, self.titulo, self.usuario.login)
+
+class Mensaje(db.Model):
+    __tablename__ = 'mensaje'
+    id = db.Column(db.Integer, primary_key=True)
+    contenido = db.Column(db.Text)
+    fecha = db.Column(db.DateTime)
+    
+    def __init__(self, contenido, fecha):
+        self.contenido = contenido
+        self.fecha = fecha
+    
+    def __repr__(self):
+        return '<MENSAJE --> id:{} contenido:{} fecha:{}>'.format(self.id, self.contenido, self.fecha)
+
+
+
 
 #Application code ends here
 
