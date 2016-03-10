@@ -69,9 +69,9 @@ class Grupo(db.Model):
                     backref=db.backref("grupo", lazy='dynamic'),
                     lazy='dynamic'
                     )
-    duenio = db.relationship("Usuario", uselist=False,
+    '''duenio = db.relationship("Usuario", uselist=False,
     backref=db.backref("duenioGrupo", lazy='dynamic'), lazy='dynamic'
-    )
+    )'''
     
     def __init__(self, nombre):
         self.nombre = nombre
@@ -102,7 +102,7 @@ class Usuario(db.Model):
     correo = db.Column(db.String(20))
     pagina = db.relationship('Pagina', backref='usuario', lazy='dynamic')
     grupo_id = db.Column(db.Integer, db.ForeignKey('grupo.id'))
-    duenioGrupo_id = db.Column(db.Integer, db.ForeignKey('grupo.id'))
+    #duenioGrupo_id = db.Column(db.Integer, db.ForeignKey('grupo.id'))
     contacto = db.relationship("Usuario",
                     secondary=user_to_user,
                     primaryjoin=id==user_to_user.c.follower_id,

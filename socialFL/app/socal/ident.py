@@ -36,7 +36,9 @@ def ARegistrar():
     results = [{'label':'/VLogin', 'msg':['Felicitaciones, Ya estás registrado en la aplicación']}, {'label':'/VRegistro', 'msg':['Error al tratar de registrarse']}, ]
     res = results[0]
     #Action code goes here, res should be a list with a label and a message
-
+    
+    print(params)
+    
     usuario = Usuario(
         params['nombre'],
         params['usuario'],
