@@ -4,24 +4,6 @@
 #Si no lo tiene instalado, puede hacerlo ejecutando el comando
 sudo apt-get install python3-pip
 
-#Crear una carpeta aplicaciones
-
-mkdir aplicaciones
-
-#En una ventana de comandos cambiar a la carpeta principal de la aplicación.
-
-cd aplicaciones
-
-Crear el ambiente virtual
-
-pyvenv-3.4 --without-pip --system-site-packages venv3
-
-#Descomprimir los archivos de esta distribución
-
-#Activar el ambiente virtual
-
-source venv3/bin/activate
-
 #Instalar Flask (La primera vez que lo haga puede que necesite ejecutarlo con sudo)
 
 pip3 install flask
@@ -72,16 +54,3 @@ los archivos pertinentes:
 
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
-
-Para instalar con Miniconda:
-Crear ambiente:
-
-conda create -n condaenv3 python=3.4
-source activate condaenv3
-
-Instalar paquetes
-
-conda install flask
-conda install --channel https://conda.anaconda.org/ziff flask-script
-conda install --channel https://conda.anaconda.org/hugo flask-sqlalchemy
-(Flask-Migrate no está empaquetado para anaconda)
