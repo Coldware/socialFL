@@ -11,8 +11,8 @@ def AModificarPagina():
     res = results[0]
     #Action code goes here, res should be a list with a label and a message
     
-    res['label'] = res['label'] + '/' + 'Leo'
-    usuario = Usuario.query.filter_by(login=session['actor']).first()
+    res['label'] = res['label'] + '/' + session['idUsuario']
+    usuario = Usuario.query.filter_by(login=session['idUsuario']).first()
     
     pagina = Pagina(
         params["titulo"],
@@ -37,6 +37,48 @@ def AModificarPagina():
     return json.dumps(res)
 
 
+@paginas.route('/paginas/APagina')
+def APagina():
+    #GET parameter
+    idPagina = request.args['idPagina']
+    results = [{'label':'/VPagina', 'msg':[]}, {'label':'/VMiPagina', 'msg':[]}, ]
+    res = results[0]
+    #Action code goes here, res should be a list with a label and a message
+
+    #Cuando la página exista, ir directamente a ella. 
+    if idPagina != 'Sin Pagina':
+        res = results[1]
+        res['label'] = res['label'] + '/' + session['idUsuario']
+        print('PAGINA EXISTE Y ES %s'%idPagina)
+    else: #Si no exite ir al editor de páginas.
+        print('PAGINA NO EXISTEY ES %s'%idPagina)
+        res['label'] = res['label'] + '/' + session['idUsuario']
+
+    #Action code ends here
+    if "actor" in res:
+        if res['actor'] is None:
+            session.pop("actor", None)
+        else:
+            session['actor'] = res['actor']
+    return json.dumps(res)
+
+
+
+@paginas.route('/paginas/VMiPagina')
+def VMiPagina():
+    #GET parameter
+    idUsuario = request.args['idUsuario']
+    res = {}
+    if "actor" in session:
+        res['actor']=session['actor']
+    #Action code goes here, res should be a JSON structure
+
+    res['titulo'] = "El título de mi página"
+    res['contenido'] = "<h3>¿No es bella mi página?</h3><p>Claro que <b>si</b>.</p>"
+    
+
+    #Action code ends here
+    return json.dumps(res)
 
 @paginas.route('/paginas/VPagina')
 def VPagina():
@@ -60,4 +102,6 @@ def VPagina():
 
 
 #Use case code ends here
+
+
 
