@@ -37,8 +37,6 @@ def ARegistrar():
     res = results[0]
     #Action code goes here, res should be a list with a label and a message
     
-    print(Usuario.query.all())
-    
     usuario = Usuario(
         params['nombre'],
         params['usuario'],
@@ -49,7 +47,6 @@ def ARegistrar():
     try: #If user is not in the DB it will register
         db.session.add(usuario)
         db.session.commit()
-        print(usuario.id)
     except:
         res = results[1]
     db.session.close()
@@ -71,7 +68,8 @@ def VLogin():
     if "actor" in session:
         res['actor']=session['actor']
     #Action code goes here, res should be a JSON structure
-
+    
+    session.clear()
 
     #Action code ends here
     return json.dumps(res)
