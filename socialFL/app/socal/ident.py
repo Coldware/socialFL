@@ -37,7 +37,7 @@ def ARegistrar():
     res = results[0]
     #Action code goes here, res should be a list with a label and a message
     
-    print(params)
+    print(Usuario.query.all())
     
     usuario = Usuario(
         params['nombre'],
@@ -49,6 +49,7 @@ def ARegistrar():
     try: #If user is not in the DB it will register
         db.session.add(usuario)
         db.session.commit()
+        print(usuario.id)
     except:
         res = results[1]
     db.session.close()
