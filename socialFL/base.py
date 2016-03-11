@@ -2,6 +2,7 @@ from flask import Flask, session
 from flask.ext.script import Manager, Server, prompt_bool
 from random import SystemRandom
 from datetime import timedelta
+from datetime import datetime
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.migrate import Migrate, MigrateCommand
 import os
@@ -14,17 +15,6 @@ manager.add_command("runserver", Server(
     use_reloader = True,
     host = '0.0.0.0', port = 8080)
 )
-
-@manager.command
-def initdb():
-    db.create_all()
-    print("La base de datos ha sido inicializada.")
-    
-@manager.command
-def dropdb():
-    if prompt_bool("Estas seguro que quieres borrar toda la data?"):
-        db.drop_all()
-        print("Base de datos borrada.")
 
 @app.before_request
 def make_session_permanent():
@@ -59,7 +49,6 @@ member_to_group = db.Table('member_to_group',
 )
 
 class Grupo(db.Model):
-    __tablename__ = 'grupo'
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(20))
     miembros = db.relationship("Usuario",
@@ -94,13 +83,12 @@ class Grupo(db.Model):
 
 
 class Usuario(db.Model):
-    __tablename__ = 'usuario'
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(15))
     login = db.Column(db.String(15), index=True, unique=True)
     clave = db.Column(db.String(15))
     correo = db.Column(db.String(20))
-    pagina = db.relationship('Pagina', backref='usuario', lazy='dynamic')
+    pagina = db.relationship('Pagina', backref="usuario", lazy='dynamic')
     grupo_id = db.Column(db.Integer, db.ForeignKey('grupo.id'))
     #duenioGrupo_id = db.Column(db.Integer, db.ForeignKey('grupo.id'))
     contacto = db.relationship("Usuario",
@@ -140,7 +128,6 @@ class Usuario(db.Model):
         return self.contacto.filter(user_to_user.c.followed_id == usuario.id).count() > 0
 
 class Pagina(db.Model):
-    __tablename__ = 'pagina'
     id = db.Column(db.Integer, primary_key=True)
     titulo = db.Column(db.String(20), index=True, unique=True)
     contenido = db.Column(db.Text)
@@ -155,13 +142,14 @@ class Pagina(db.Model):
         return '<PAGINA --> id:{} titulo:{} usuario:{}>'.format(self.id, self.titulo, self.usuario.login)
 
 class Mensaje(db.Model):
-    __tablename__ = 'mensaje'
     id = db.Column(db.Integer, primary_key=True)
     contenido = db.Column(db.Text)
     fecha = db.Column(db.DateTime)
     
-    def __init__(self, contenido, fecha):
+    def __init__(self, contenido, fecha=None):
         self.contenido = contenido
+        if fecha is None:
+            fecha = datetime.utcnow()
         self.fecha = fecha
     
     def __repr__(self):
