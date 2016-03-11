@@ -1,13 +1,13 @@
 from flask import request, session, Blueprint, json
 
 ident = Blueprint('ident', __name__)
-from base import db, Usuario
+from base import db, Usuario , Pagina
 
 @ident.route('/ident/AIdentificar', methods=['POST'])
 def AIdentificar():
     #POST/PUT parameters
     params = request.get_json()
-    results = [{'label':'/VPrincipal', 'msg':['Bienvenido usuario'], "actor":"duenoProducto"}, {'label':'/VLogin', 'msg':['Datos de identificación incorrectos']}, ]
+    results = [{'label':'/VPrincipal', 'msg':'!Bienvenido '+params['usuario']+'!', "actor":"duenoProducto","idUsuario":params['usuario']},{'label':'/VLogin','msg':['Datos de identificación incorrectos']}, ]
     res = results[0]
     #Action code goes here, res should be a list with a label and a message
     
@@ -23,9 +23,9 @@ def AIdentificar():
         if res['actor'] is None:
             session.pop("actor", None)
         else:
-            session['actor'] = res['actor']
+            session['actor'] = res['actor']            
+            session['idUsuario'] = res['idUsuario'] # Este idUsuario es el Login(nombre) 
     return json.dumps(res)
-
 
 
 
@@ -81,9 +81,20 @@ def VPrincipal():
     res = {}
     if "actor" in session:
         res['actor']=session['actor']
+        res['idPagina'] = 'Sin Pagina'
     #Action code goes here, res should be a JSON structure
-    
-    res['idUsuario'] = 'Leo'
+    if 'idUsuario' in session: # Veo si el nombre de usuario esta en la sesion 
+        res['idUsuario'] = session['idUsuario']
+        try: #Si esta busco si tiene pagina
+            usuario = Usuario.query.filter_by(login=res['idUsuario']).first()
+            print (usuario) ### BORRAR
+            pagina = Pagina.query.filter_by(idUsuario=usuario.idUsuario).first()
+            print (pagina) ### BORRAR
+            res['idPagina'] = pagina.idPagina
+        except: 
+            print ('SIN PAGINA') ### BORRAR      
+    else:
+        print (session)    
     
     #Action code ends here
     return json.dumps(res)
@@ -110,4 +121,5 @@ def VRegistro():
 
 
 #Use case code ends here
+
 
