@@ -72,11 +72,17 @@ def VMiPagina():
     if "actor" in session:
         res['actor']=session['actor']
     #Action code goes here, res should be a JSON structure
-
-    res['titulo'] = "El título de mi página"
-    res['contenido'] = "<h3>¿No es bella mi página?</h3><p>Claro que <b>si</b>.</p>"
-    
-
+    try: #Busco si tiene pagina
+        usuario = Usuario.query.filter_by(login=idUsuario).first()
+        print (usuario) ### BORRAR
+        pagina = Pagina.query.filter_by(pagina_id=usuario.id).first()
+        print (pagina) ### BORRAR
+        res['titulo'] = pagina.titulo   #Devolvemos titulo y contenido
+        res['contenido'] = pagina.contenido
+    except: # Si no encontramos pagina colocamos datos por defecto
+        print ('SIN PAGINA') ### BORRAR
+        res['titulo'] = "El título de mi página"
+        res['contenido'] = "<h3>¿No es bella mi página?</h3><p>Claro que <b>si</b>.</p>" 
     #Action code ends here
     return json.dumps(res)
 
