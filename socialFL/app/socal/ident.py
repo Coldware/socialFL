@@ -88,9 +88,9 @@ def VPrincipal():
         try: #Si esta busco si tiene pagina
             usuario = Usuario.query.filter_by(login=res['idUsuario']).first()
             print (usuario) ### BORRAR
-            pagina = Pagina.query.filter_by(idUsuario=usuario.idUsuario).first()
+            pagina = Pagina.query.filter_by(pagina_id=usuario.id).first()
             print (pagina) ### BORRAR
-            res['idPagina'] = pagina.idPagina
+            res['idPagina'] = pagina.id
         except: 
             print ('SIN PAGINA') ### BORRAR      
     else:
