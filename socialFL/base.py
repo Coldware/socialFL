@@ -48,8 +48,15 @@ member_to_group = db.Table('member_to_group',
     db.Column('group_id', db.Integer, db.ForeignKey('grupo.id'))
 )
 
-class Grupo(db.Model):
+class Chateador(db.Model):
+    __tablename__ = 'chateador'
     id = db.Column(db.Integer, primary_key=True)
+    chat = db.relationship("Mensaje", backref="chateador", lazy='dynamic')
+
+class Grupo(Chateador):
+    __tablename__ = 'grupo'
+    __mapper_args__ = {'polymorphic_identity': 'grupo'}
+    id = db.Column(db.Integer, db.ForeignKey('chateador.id'), primary_key=True)
     nombre = db.Column(db.String(20))
     miembros = db.relationship("Usuario",
                     secondary=member_to_group,
@@ -58,9 +65,7 @@ class Grupo(db.Model):
                     backref=db.backref("grupo", lazy='dynamic'),
                     lazy='dynamic'
                     )
-    '''duenio = db.relationship("Usuario", uselist=False,
-    backref=db.backref("duenioGrupo", lazy='dynamic'), lazy='dynamic'
-    )'''
+    duenio = db.Column(db.Integer)
     
     def __init__(self, nombre):
         self.nombre = nombre
@@ -82,15 +87,16 @@ class Grupo(db.Model):
         return self.miembros.filter(member_to_group.c.member_id == miembro.id).count() > 0
 
 
-class Usuario(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+class Usuario(Chateador):
+    __tablename__ = 'usuario'
+    __mapper_args__ = {'polymorphic_identity': 'usuario'}
+    id = db.Column(db.Integer, db.ForeignKey('chateador.id'), primary_key=True)
     nombre = db.Column(db.String(15))
     login = db.Column(db.String(15), index=True, unique=True)
     clave = db.Column(db.String(15))
     correo = db.Column(db.String(20))
     pagina = db.relationship('Pagina', backref="usuario", lazy='dynamic')
     grupo_id = db.Column(db.Integer, db.ForeignKey('grupo.id'))
-    #duenioGrupo_id = db.Column(db.Integer, db.ForeignKey('grupo.id'))
     contacto = db.relationship("Usuario",
                     secondary=user_to_user,
                     primaryjoin=id==user_to_user.c.follower_id,
@@ -98,6 +104,7 @@ class Usuario(db.Model):
                     backref=db.backref("followed_by", lazy='dynamic'),
                     lazy='dynamic'
     )
+    mensaje = db.relationship("Mensaje", backref="autor", lazy='dynamic')
 
     def __init__(self, nombre, login, clave, correo):
         self.nombre = nombre
@@ -128,6 +135,7 @@ class Usuario(db.Model):
         return self.contacto.filter(user_to_user.c.followed_id == usuario.id).count() > 0
 
 class Pagina(db.Model):
+    __tablename__ = 'pagina'
     id = db.Column(db.Integer, primary_key=True)
     titulo = db.Column(db.String(20), index=True, unique=True)
     contenido = db.Column(db.Text)
@@ -142,15 +150,19 @@ class Pagina(db.Model):
         return '<PAGINA --> id:{} titulo:{} usuario:{}>'.format(self.id, self.titulo, self.usuario.login)
 
 class Mensaje(db.Model):
+    __tablename__ = 'mensaje'
     id = db.Column(db.Integer, primary_key=True)
     contenido = db.Column(db.Text)
     fecha = db.Column(db.DateTime)
+    chateador_id = db.Column(db.Integer, db.ForeignKey('chateador.id'))
+    mensaje_id = db.Column(db.Integer, db.ForeignKey('usuario.id'))
     
     def __init__(self, contenido, fecha=None):
         self.contenido = contenido
         if fecha is None:
-            fecha = datetime.utcnow()
-        self.fecha = fecha
+            self.fecha = datetime.utcnow()
+        else:
+            self.fecha = fecha
     
     def __repr__(self):
         return '<MENSAJE --> id:{} contenido:{} fecha:{}>'.format(self.id, self.contenido, self.fecha)
