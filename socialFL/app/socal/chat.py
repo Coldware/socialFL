@@ -1,7 +1,7 @@
 from flask import request, session, Blueprint, json
 
 chat = Blueprint('chat', __name__)
-
+from base import db, Usuario , Pagina , Mensaje , Chateador
 
 @chat.route('/chat/AElimContacto')
 def AElimContacto():
@@ -48,12 +48,39 @@ def AElimMiembro():
 def AEscribir():
     #POST/PUT parameters
     params = request.get_json()
-    results = [{'label':'/VChat', 'msg':['Enviado']}, {'label':'/VChat', 'msg':['No se pudo enviar mensaje']}, ]
+    results = [{'label':'/VChat', 'msg':['Enviado']}, {'label':'/VChat', 'msg':['No se pudo enviar mensaje']}]
     res = results[0]
     #Action code goes here, res should be a list with a label and a message
 
     res['label'] = res['label'] + '/' + repr(1)
 
+    res['idUsuario']=session['idUsuario']
+"""
+    print("EN EL IF DE AEscribir!!!!!!!!!!!!!!!!!!!!!!")
+    print("\n")
+    print(res['idUsuario'])
+    print("\n")
+"""
+
+    idSender = Usuario.query.filter_by(login=res['idUsuario']).first()
+#    print("ESTO ES IDSENDER.ID: ", idSender.id)
+
+    mensaje = Mensaje(params['texto'])
+
+    db.session.add(mensaje)
+    db.session.commit()
+    db.session.close()
+
+#CON ESTO SE PUEDE VERIFICAR SI EL MENSAJE FUE GUARDADO CORRECTAMENTE
+
+    try:
+        auxiliar = Mensaje.query.filter_by(contenido=params['texto']).first()
+        #print("LO AGREGUE BIEN, ESTO FUE LO QUE AGREGUE")
+        #print(auxiliar.contenido)
+        #print(session)
+    except:
+        #print("NO LO AGREGUE")
+        res = results[1]
 
     #Action code ends here
     if "actor" in res:

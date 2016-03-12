@@ -82,6 +82,7 @@ def VPrincipal():
     if "actor" in session:
         res['actor']=session['actor']
         res['idPagina'] = 'Sin Pagina'
+        
     #Action code goes here, res should be a JSON structure
     if 'idUsuario' in session: # Veo si el nombre de usuario esta en la sesion 
         res['idUsuario'] = session['idUsuario']
