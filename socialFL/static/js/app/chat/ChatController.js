@@ -56,6 +56,9 @@ socialModule.controller('VAdminContactosController',
 
 
       });
+      $scope.VLogin0 = function() {
+        $location.path('/VLogin');
+      };
       $scope.VPrincipal0 = function() {
         $location.path('/VPrincipal');
       };
@@ -113,6 +116,9 @@ socialModule.controller('VChatController',
 
 
       });
+      $scope.VLogin0 = function() {
+        $location.path('/VLogin');
+      };
       $scope.VContactos2 = function(idUsuario) {
         $location.path('/VContactos/'+idUsuario);
       };
@@ -165,6 +171,9 @@ socialModule.controller('VContactosController',
 
 
       });
+      $scope.VLogin0 = function() {
+        $location.path('/VLogin');
+      };
       $scope.VPrincipal0 = function() {
         $location.path('/VPrincipal');
       };
@@ -211,6 +220,9 @@ socialModule.controller('VGrupoController',
 
 
       });
+      $scope.VLogin0 = function() {
+        $location.path('/VLogin');
+      };
       $scope.ASalirGrupo1 = function() {
           
         chatService.ASalirGrupo().then(function (object) {

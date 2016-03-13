@@ -1,5 +1,5 @@
 from flask import request, session, Blueprint, json
-from sqlalchemy import desc
+from sqlalchemy import asc
 
 chat = Blueprint('chat', __name__)
 from base import db, Usuario, Pagina, Mensaje, Chateador
@@ -190,7 +190,7 @@ def VChat():
     res['idUsuario'] = session['idUsuario']
     session['idChat'] = int(idChat)
     
-    mensajes = Mensaje.query.order_by(desc(Mensaje.timestamp)).all()
+    mensajes = Mensaje.query.order_by(asc(Mensaje.timestamp)).all()
     #print(mensajes)
     
     res['mensajesAnt'] = []
