@@ -132,7 +132,8 @@ def AgregMiembro():
     results = [{'label':'/VGrupo', 'msg':['Nuevo miembro agregado']}, {'label':'/VGrupo', 'msg':['No se pudo agregar al nuevo miembro']}, ]
     res = results[0]
     #Action code goes here, res should be a list with a label and a message
-
+    
+    print(params)
     res['label'] = res['label'] + '/' + repr(1)
 
 
