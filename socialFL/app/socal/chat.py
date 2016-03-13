@@ -1,7 +1,8 @@
 from flask import request, session, Blueprint, json
+from sqlalchemy import desc
 
 chat = Blueprint('chat', __name__)
-
+from base import db, Usuario, Pagina, Mensaje, Chateador
 
 @chat.route('/chat/AElimContacto')
 def AElimContacto():
@@ -48,13 +49,31 @@ def AElimMiembro():
 def AEscribir():
     #POST/PUT parameters
     params = request.get_json()
-    results = [{'label':'/VChat', 'msg':['Enviado']}, {'label':'/VChat', 'msg':['No se pudo enviar mensaje']}, ]
+    results = [{'label':'/VChat'+ '/' + str(session['idChat']), 'msg':['Enviado']}, {'label':'/VChat' + '/' + str(session['idChat']), 'msg':['No se pudo enviar mensaje']}]
     res = results[0]
     #Action code goes here, res should be a list with a label and a message
 
-    res['label'] = res['label'] + '/' + repr(1)
-
-
+    res['idUsuario']=session['idUsuario']
+    
+    emisor = Usuario.query.get(res['idUsuario'])
+    receptor = Chateador.query.get(session['idChat'])
+    mensaje = Mensaje(params['texto'])
+    
+    db.session.add(mensaje)
+    
+    emisor.emisor.append(mensaje)
+    receptor.receptor.append(mensaje)
+    
+    db.session.commit()
+    
+    db.session.close()
+    
+    try: #CON ESTO SE PUEDE VERIFICAR SI EL MENSAJE FUE GUARDADO CORRECTAMENTE
+        test = Mensaje.query.filter_by(contenido=params['texto']).first()
+        x = test.contenido
+    except:
+        res = results[1]
+    
     #Action code ends here
     if "actor" in res:
         if res['actor'] is None:
@@ -168,14 +187,20 @@ def VChat():
     #Action code goes here, res should be a JSON structure
 
     res['idChat'] = 1
-    res['idUsuario'] = 1
-    res['mensajesAnt'] = [
-      {'texto': '¿Me traes mi gato por la tarde?', 'usuario':'ana', 'fecha':'lun feb 29 09:08:17 VET 2016'},
-      {'texto': '¡Hay! no lo encuentro, debió escaparse. Ahora salgo a buscarlo', 'usuario':'distra', 'fecha':'lun feb 29 09:09:17 VET 2016'},
-      {'texto': 'Hola vane, ayer al pasar por tu casa dejé a naco mi anacondita..', 'usuario':'uri', 'fecha':'lun feb 29 09:09:17 VET 2016'},
-      {'texto': 'La dejasete fue en mi casa. No la había visto porque está en un rincon, no se mueve y ... pareceira que tiene algo atragantado.', 'usuario':'distra', 'fecha':'lun feb 29 09:10:17 VET 2016'},
-      {'texto': '¿Qué?', 'usuario':'ana', 'fecha':'lun feb 29 09:12:17 VET 2016'},
-    ]
+    res['idUsuario'] = session['idUsuario']
+    session['idChat'] = int(idChat)
+    
+    mensajes = Mensaje.query.order_by(desc(Mensaje.timestamp)).all()
+    #print(mensajes)
+    
+    res['mensajesAnt'] = []
+    for msj in mensajes:
+        print(msj.emisor_id, end=" ")
+        print(msj.receptor_id, end=" ")
+        print(msj.contenido)
+        if ((msj.emisor_id==session['idUsuario'] and msj.receptor_id==int(idChat)) or
+        (msj.emisor_id==int(idChat) and msj.receptor_id==session['idUsuario'])):
+            res['mensajesAnt'].append({'texto':msj.contenido, 'usuario':msj.emisor.login, 'fecha':msj.timestamp})
 
     #Action code ends here
     return json.dumps(res)
@@ -191,15 +216,24 @@ def VContactos():
         res['actor']=session['actor']
     #Action code goes here, res should be a JSON structure
 
+    usuario = Usuario.query.get(idUsuario)
+    
+    contacts = Usuario.query.get(idUsuario).contacto.all()
+    #print(contacts)
+    
     res['idContacto'] = 1
-    res['data1'] = [
+    
+    res['data1'] = []
+    for x in contacts:
+        res['data1'].append({'idContacto':x.id, 'nombre':x.login, 'tipo':'usuario'})
+    
+    '''res['data1'] = [
       {'idContacto':34, 'nombre':'ana', 'tipo':'usuario'},
       {'idContacto':23, 'nombre':'leo', 'tipo':'usuario'},
       {'idContacto':11, 'nombre':'distra', 'tipo':'usuario'},
       {'idContacto':40, 'nombre':'vane', 'tipo':'usuario'},
       {'idContacto':56, 'nombre':'Grupo Est. Leng.', 'tipo':'grupo'},
-    ]
-
+    ]'''
 
     #Action code ends here
     return json.dumps(res)

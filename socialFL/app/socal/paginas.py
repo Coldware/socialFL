@@ -48,11 +48,11 @@ def APagina():
     #Cuando la página exista, ir directamente a ella. 
     if idPagina != 'Sin Pagina':
         res = results[1]
-        res['label'] = res['label'] + '/' + session['idUsuario']
+        res['label'] = res['label'] + '/' + str(session['idUsuario'])
         print('PAGINA EXISTE Y ES %s'%idPagina)
     else: #Si no exite ir al editor de páginas.
-        print('PAGINA NO EXISTEY ES %s'%idPagina)
-        res['label'] = res['label'] + '/' + session['idUsuario']
+        print('PAGINA NO EXISTE Y ES %s'%idPagina)
+        res['label'] = res['label'] + '/' + str(session['idUsuario'])
 
     #Action code ends here
     if "actor" in res:
