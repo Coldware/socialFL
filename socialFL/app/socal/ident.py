@@ -15,6 +15,7 @@ def AIdentificar():
         usuario = Usuario.query.filter_by(login=params['usuario']).first()
         if usuario.clave!=params['clave']:
             res = results[1]
+        res['idUsuario'] = usuario.id
     except:
         res = results[1]
 
@@ -84,14 +85,14 @@ def VPrincipal():
         res['idPagina'] = 'Sin Pagina'
         
     #Action code goes here, res should be a JSON structure
-    if 'idUsuario' in session: # Veo si el nombre de usuario esta en la sesion 
+    if 'idUsuario' in session: # Veo si el id de usuario esta en la sesion 
         res['idUsuario'] = session['idUsuario']
         try: #Si esta busco si tiene pagina
-            usuario = Usuario.query.filter_by(login=res['idUsuario']).first()
-            print (usuario) ### BORRAR
-            pagina = Pagina.query.filter_by(idUsuario=usuario.idUsuario).first()
-            print (pagina) ### BORRAR
-            res['idPagina'] = pagina.idPagina
+            usuario = Usuario.query.get(res['idUsuario'])
+            print ("VPrincipal--> {}".format(usuario)) ### BORRAR
+            pagina = Pagina.query.filter_by(pagina_id=res['idUsuario']).first()
+            print ("VPrincipal--> {}".format(pagina)) ### BORRAR
+            res['idPagina'] = pagina.id
         except: 
             print ('SIN PAGINA') ### BORRAR      
     else:
