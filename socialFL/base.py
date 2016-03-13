@@ -44,8 +44,8 @@ followers = db.Table('followers',
 )
 
 miembros = db.Table('miembros',
-    db.Column('member_id', db.Integer, db.ForeignKey('usuario.id')),
-    db.Column('group_id', db.Integer, db.ForeignKey('grupo.id'))
+    db.Column("member_id", db.Integer, db.ForeignKey("usuario.id")),
+    db.Column("group_id", db.Integer, db.ForeignKey("grupo.id"))
 )
 
 class Chateador(db.Model):
@@ -100,17 +100,19 @@ class Grupo(Chateador):
     __mapper_args__ = {'polymorphic_identity': 'grupo'}
     id = db.Column(db.Integer, db.ForeignKey('chateador.id'), primary_key=True)
     nombre = db.Column(db.String(20))
+    duenio = db.Column(db.Integer)
     miembros = db.relationship("Usuario",
                     secondary=miembros,
-                    primaryjoin=id==miembros.c.member_id,
-                    secondaryjoin=id==miembros.c.group_id,
-                    backref=db.backref("grupos", lazy='dynamic'),
+                    #primaryjoin=(miembros.c.member_id == id),
+                    #secondaryjoin=(miembros.c.group_id == id),
+                    backref=db.backref("grupos", lazy='dynamic'), 
                     lazy='dynamic'
                     )
-    duenio = db.Column(db.Integer)
     
-    def __init__(self, nombre):
+    def __init__(self, nombre, duenio):
         self.nombre = nombre
+        self.duenio = duenio
+        self.miembros.append(Usuario.query.get(duenio))
     
     def __repr__(self):
         return '<GRUPO {}>'.format(self.nombre)

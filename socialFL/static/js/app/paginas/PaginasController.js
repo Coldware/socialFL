@@ -23,6 +23,9 @@ socialModule.controller('VMiPaginaController',
 
 
       });
+      $scope.VLogin0 = function() {
+        $location.path('/VLogin');
+      };
       $scope.VPrincipal1 = function() {
         $location.path('/VPrincipal');
       };
@@ -52,6 +55,9 @@ socialModule.controller('VPaginaController',
 
 
       });
+      $scope.VLogin0 = function() {
+        $location.path('/VLogin');
+      };
       $scope.VPrincipal1 = function() {
         $location.path('/VPrincipal');
       };

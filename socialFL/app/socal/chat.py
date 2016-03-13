@@ -1,5 +1,5 @@
 from flask import request, session, Blueprint, json
-from sqlalchemy import desc
+from sqlalchemy import asc
 
 chat = Blueprint('chat', __name__)
 from base import db, Usuario, Pagina, Mensaje, Chateador
@@ -132,7 +132,8 @@ def AgregMiembro():
     results = [{'label':'/VGrupo', 'msg':['Nuevo miembro agregado']}, {'label':'/VGrupo', 'msg':['No se pudo agregar al nuevo miembro']}, ]
     res = results[0]
     #Action code goes here, res should be a list with a label and a message
-
+    
+    print(params)
     res['label'] = res['label'] + '/' + repr(1)
 
 
@@ -190,7 +191,7 @@ def VChat():
     res['idUsuario'] = session['idUsuario']
     session['idChat'] = int(idChat)
     
-    mensajes = Mensaje.query.order_by(desc(Mensaje.timestamp)).all()
+    mensajes = Mensaje.query.order_by(asc(Mensaje.timestamp)).all()
     #print(mensajes)
     
     res['mensajesAnt'] = []
