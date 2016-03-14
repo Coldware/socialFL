@@ -33,7 +33,12 @@ def AElimMiembro():
     res = results[0]
     #Action code goes here, res should be a list with a label and a message
 
-    res['label'] = res['label'] + '/' + repr(1)
+    res['label'] = res['label'] + '/' + session['idGrupo']
+
+    grupo = Grupo.query.get(session['idGrupo'])
+    usuario = Usuario.query.get(id)
+    grupo.delMember(usuario)
+    db.session.commit()
 
     #Action code ends here
     if "actor" in res:
@@ -92,8 +97,16 @@ def ASalirGrupo():
     res = results[0]
     #Action code goes here, res should be a list with a label and a message
 
-    res['label'] = res['label'] + '/' + repr(1)
+    res['label'] = res['label'] + '/' + session['idUsuario']
 
+    grupo = Grupo.query.get(ession['idGrupo'])
+    usuario = Usuario.query.get(session['idUsuario'])
+    grupo.delMember(usuario)
+
+    if(grupo.miembros.count()==0):
+        db.session.delete(grupo)
+
+    db.session.commit()
 
     #Action code ends here
     if "actor" in res:
@@ -133,9 +146,12 @@ def AgregMiembro():
     res = results[0]
     #Action code goes here, res should be a list with a label and a message
     
-    print(params)
-    res['label'] = res['label'] + '/' + repr(1)
+    res['label'] = res['label'] + '/' + session['idGrupo']
 
+    grupo = Grupo.query.get(session['idGrupo'])
+    usuario = Usuario.query.get(params['nombre'])
+    grupo.addMember(usuario)
+    db.session.commit()
 
     #Action code ends here
     if "actor" in res:
@@ -250,18 +266,24 @@ def VGrupo():
         res['actor']=session['actor']
     #Action code goes here, res should be a JSON structure
 
-    res['idGrupo'] = 1
-    res['fMiembro_opcionesNombre'] = [
-      {'key':1, 'value':'Leo'},
-      {'key':2, 'value':'Lauri'},
-      {'key':3, 'value':'Mara'},
-    ]
-    res['data3'] = [
-      {'idContacto':34, 'nombre':'ana', 'tipo':'usuario'},
-      {'idContacto':23, 'nombre':'leo', 'tipo':'usuario'},
-      {'idContacto':11, 'nombre':'distra', 'tipo':'usuario'},
-      {'idContacto':40, 'nombre':'vane', 'tipo':'usuario'},
-    ]
+    res['idGrupo'] = idGrupo
+
+    grupo = Grupo.query.get(idGrupo)
+
+    res['fMiembro_opcionesNombre'] = []
+    res['data3'] = [] 
+    
+    usuario = Usuario.query.get(session['idUsuario'])
+
+
+    for contacto in usuario.contacto:
+        if(contacto not in grupo.miembros):
+            res['fMiembro_opcionesNombre'].append({'key':contacto.id, 'value':contacto.nombre})
+ 
+    for contacto in grupo.miembros:
+        if(contacto.id != usuario.id):
+            res['data3'].append({'idContacto':contacto.id, 'nombre':contacto.nombre, 'tipo':'usuario'})
+
 
     #Action code ends here
     return json.dumps(res)
