@@ -99,7 +99,7 @@ def ASalirGrupo():
 
     res['label'] = res['label'] + '/' + session['idUsuario']
 
-    grupo = Grupo.query.get(ession['idGrupo'])
+    grupo = Grupo.query.get(session['idGrupo'])
     usuario = Usuario.query.get(session['idUsuario'])
     grupo.delMember(usuario)
 
