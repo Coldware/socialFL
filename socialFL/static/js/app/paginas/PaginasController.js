@@ -46,6 +46,10 @@ socialModule.controller('VPaginaController',
         for (var key in object.data) {
             $scope[key] = object.data[key];
         }
+        if ($scope.titulo != 'Sin Pagina') { // Cambio para que salgan modificaciones 
+            $scope.fPagina.titulo = $scope.titulo;
+            $scope.fPagina.contenido = $scope.contenido;
+        }
         if ($scope.logout) {
             $location.path('/');
         }
