@@ -125,9 +125,21 @@ def AgregContacto():
     results = [{'label':'/VAdminContactos', 'msg':['Contacto agregado']}, {'label':'/VAdminContactos', 'msg':['No se pudo agregar contacto']}, ]
     res = results[0]
     #Action code goes here, res should be a list with a label and a message
-
-    res['label'] = res['label'] + '/' + repr(1)
-
+    
+    idUsuario = request.args['idUsuario']
+    res['label'] = res['label'] + '/' + str(idUsuario)
+    
+    user = Usuario.query.get(idUsuario)    
+    user2 = Usuario.query.get(params)
+    print(user)
+    print(user2)
+    try:
+        user.addContact(user2)
+        user2.addContact(user)
+        db.session.commit()
+    except:
+        res = results[1]
+    
     #Action code ends here
     if "actor" in res:
         if res['actor'] is None:
@@ -171,7 +183,35 @@ def VAdminContactos():
     if "actor" in session:
         res['actor']=session['actor']
     #Action code goes here, res should be a JSON structure
+    
+    res['idContacto'] = 1
+    
+    user = Usuario.query.get(idUsuario) 
+    print(user)
 
+    unknown = Usuario.query.filter(Usuario.nombre != user.nombre)
+    contacts = Usuario.query.get(idUsuario).contacto.all()
+    
+    print("Estos son mis contactos")
+    print(contacts)
+    
+    print("Estos son los que desconozco")
+    print(unknown)
+    
+    res['data1'] = []
+    for x in contacts:
+        res['data1'].append({'idContacto':x.id, 'nombre':x.login, 'tipo':'usuario'})
+    
+    res['data2'] = [
+      {'idContacto':56, 'nombre':'Grupo Est. Leng.', 'tipo':'grupo'},
+    ]
+    
+    res['idGrupo'] = 1
+    res['fContacto_opcionesNombre'] = []
+    for x in unknown:
+        res['fContacto_opcionesNombre'].append({'key':x.id, 'value':x.login })
+    
+    '''
     res['idContacto'] = 1
     res['data1'] = [
       {'idContacto':34, 'nombre':'ana', 'tipo':'usuario'},
@@ -188,6 +228,7 @@ def VAdminContactos():
       {'key':2, 'value':'Lauri'},
       {'key':3, 'value':'Mara'},
     ]
+    '''
 
     #Action code ends here
     return json.dumps(res)
@@ -239,7 +280,7 @@ def VContactos():
     #print(contacts)
     
     res['idContacto'] = 1
-    
+    res['idUsuario'] = idUsuario
     res['data1'] = []
     for x in contacts:
         res['data1'].append({'idContacto':x.id, 'nombre':x.login, 'tipo':'usuario'})
@@ -265,7 +306,8 @@ def VGrupo():
     if "actor" in session:
         res['actor']=session['actor']
     #Action code goes here, res should be a JSON structure
-
+    
+    res["idUsuario"]= session['idUsuario']
     res['idGrupo'] = idGrupo
 
     grupo = Grupo.query.get(idGrupo)
