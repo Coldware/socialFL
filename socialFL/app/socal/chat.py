@@ -126,19 +126,21 @@ def AgregContacto():
     res = results[0]
     #Action code goes here, res should be a list with a label and a message
     
-    idUsuario = request.args['idUsuario']
-    res['label'] = res['label'] + '/' + str(idUsuario)
+    idUsuario = session['idUsuario']
+
+    user = Usuario.query.get(idUsuario)
+    #print("Usuario 1: {}".format(user))
+    user2 = Usuario.query.get(params['nombre'])
+    #print("Usuario 2: {}".format(user2))
     
-    user = Usuario.query.get(idUsuario)    
-    user2 = Usuario.query.get(params)
-    print(user)
-    print(user2)
-    try:
+    if user.esContacto(user2)==0:
         user.addContact(user2)
         user2.addContact(user)
         db.session.commit()
-    except:
+    else:
         res = results[1]
+    
+    res['label'] = res['label'] + '/' + str(idUsuario)
     
     #Action code ends here
     if "actor" in res:
@@ -186,18 +188,18 @@ def VAdminContactos():
     
     res['idContacto'] = 1
     
-    user = Usuario.query.get(idUsuario) 
-    print(user)
-
-    unknown = Usuario.query.filter(Usuario.nombre != user.nombre)
+    user = Usuario.query.get(idUsuario)
+    
+    unknown = Usuario.query.filter(Usuario.nombre!=user.nombre).all()
     contacts = Usuario.query.get(idUsuario).contacto.all()
     
-    print("Estos son mis contactos")
-    print(contacts)
+    for x in contacts:
+        if x in unknown:
+            unknown.remove(x)
     
-    print("Estos son los que desconozco")
-    print(unknown)
-    
+    print("Estos son mis contactos: {}".format(contacts))
+    print("Estos son los que desconozco: {}".format(unknown))
+
     res['data1'] = []
     for x in contacts:
         res['data1'].append({'idContacto':x.id, 'nombre':x.login, 'tipo':'usuario'})
@@ -209,26 +211,7 @@ def VAdminContactos():
     res['idGrupo'] = 1
     res['fContacto_opcionesNombre'] = []
     for x in unknown:
-        res['fContacto_opcionesNombre'].append({'key':x.id, 'value':x.login })
-    
-    '''
-    res['idContacto'] = 1
-    res['data1'] = [
-      {'idContacto':34, 'nombre':'ana', 'tipo':'usuario'},
-      {'idContacto':23, 'nombre':'leo', 'tipo':'usuario'},
-      {'idContacto':11, 'nombre':'distra', 'tipo':'usuario'},
-      {'idContacto':40, 'nombre':'vane', 'tipo':'usuario'},
-    ]
-    res['data2'] = [
-      {'idContacto':56, 'nombre':'Grupo Est. Leng.', 'tipo':'grupo'},
-    ]
-    res['idGrupo'] = 1
-    res['fContacto_opcionesNombre'] = [
-      {'key':1, 'value':'Leo'},
-      {'key':2, 'value':'Lauri'},
-      {'key':3, 'value':'Mara'},
-    ]
-    '''
+        res['fContacto_opcionesNombre'].append({'key':x.id, 'value':x.login})
 
     #Action code ends here
     return json.dumps(res)
