@@ -256,16 +256,12 @@ def VContactos():
     if "actor" in session:
         res['actor']=session['actor']
     #Action code goes here, res should be a JSON structure
-<<<<<<< HEAD
-    res['idUsuario'] = idUsuario 
-=======
 
     usuario = Usuario.query.get(idUsuario)
     
     contacts = Usuario.query.get(idUsuario).contacto.all()
     #print(contacts)
     
->>>>>>> develop
     res['idContacto'] = 1
     res['idUsuario'] = idUsuario
     res['data1'] = []
