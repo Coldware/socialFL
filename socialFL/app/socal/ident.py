@@ -89,12 +89,10 @@ def VPrincipal():
         res['idUsuario'] = session['idUsuario']
         try: #Si esta busco si tiene pagina
             usuario = Usuario.query.get(res['idUsuario'])
-            print ("VPrincipal--> {}".format(usuario)) ### BORRAR
             pagina = Pagina.query.filter_by(pagina_id=res['idUsuario']).first()
-            print ("VPrincipal--> {}".format(pagina)) ### BORRAR
             res['idPagina'] = pagina.id
         except: 
-            print ('SIN PAGINA') ### BORRAR      
+            print ('SIN PAGINA')     
     else:
         print (session)    
     

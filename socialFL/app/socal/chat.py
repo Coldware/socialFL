@@ -2,7 +2,7 @@ from flask import request, session, Blueprint, json
 from sqlalchemy import asc
 
 chat = Blueprint('chat', __name__)
-from base import db, Usuario, Pagina, Mensaje, Chateador
+from base import db, Usuario, Pagina, Mensaje, Chateador, Grupo
 
 @chat.route('/chat/AElimContacto')
 def AElimContacto():
@@ -12,8 +12,20 @@ def AElimContacto():
     res = results[0]
     #Action code goes here, res should be a list with a label and a message
 
-    res['label'] = res['label'] + '/' + repr(1)
-
+    idUsuario = session['idUsuario']
+    user = Usuario.query.get(idUsuario)
+    #print("Usuario 1: {}".format(user))
+    user2 = Usuario.query.get(id)
+    #print("Usuario 2: {}".format(user2))
+    
+    try:
+        user.delContact(user2)
+        user2.delContact(user)
+        db.session.commit()
+    except:
+        res = results[1]
+    
+    res['label'] = res['label'] + '/' + str(idUsuario)
 
     #Action code ends here
     if "actor" in res:
@@ -54,7 +66,7 @@ def AElimMiembro():
 def AEscribir():
     #POST/PUT parameters
     params = request.get_json()
-    results = [{'label':'/VChat'+ '/' + str(session['idChat']), 'msg':['Enviado']}, {'label':'/VChat' + '/' + str(session['idChat']), 'msg':['No se pudo enviar mensaje']}]
+    results = [{'label':'/VChat', 'msg':['Enviado']}, {'label':'/VChat', 'msg':['No se pudo enviar mensaje']}]
     res = results[0]
     #Action code goes here, res should be a list with a label and a message
 
@@ -79,6 +91,8 @@ def AEscribir():
     except:
         res = results[1]
     
+    res['label'] = res['label'] + '/' + str(session['idChat'])
+    
     #Action code ends here
     if "actor" in res:
         if res['actor'] is None:
@@ -97,16 +111,20 @@ def ASalirGrupo():
     res = results[0]
     #Action code goes here, res should be a list with a label and a message
 
-    res['label'] = res['label'] + '/' + session['idUsuario']
-
     grupo = Grupo.query.get(session['idGrupo'])
-    usuario = Usuario.query.get(session['idUsuario'])
-    grupo.delMember(usuario)
+    
+    try:
+        usuario = Usuario.query.get(session['idUsuario'])
+        grupo.delMember(usuario)
+        
+        if(grupo.miembros.count()==0):
+            db.session.delete(grupo)
+        
+        db.session.commit()
+    except:
+        res = results[1]
 
-    if(grupo.miembros.count()==0):
-        db.session.delete(grupo)
-
-    db.session.commit()
+    res['label'] = res['label'] + '/' + session['idUsuario']
 
     #Action code ends here
     if "actor" in res:
@@ -197,16 +215,18 @@ def VAdminContactos():
         if x in unknown:
             unknown.remove(x)
     
-    print("Estos son mis contactos: {}".format(contacts))
-    print("Estos son los que desconozco: {}".format(unknown))
+    #print("Estos son mis contactos: {}".format(contacts))
+    #print("Estos son los que desconozco: {}".format(unknown))
 
     res['data1'] = []
     for x in contacts:
         res['data1'].append({'idContacto':x.id, 'nombre':x.login, 'tipo':'usuario'})
     
-    res['data2'] = [
-      {'idContacto':56, 'nombre':'Grupo Est. Leng.', 'tipo':'grupo'},
-    ]
+    groups = Grupo.query.all()
+    
+    res['data2'] = [{'idContacto':56, 'nombre':'Grupo Est. Leng.', 'tipo':'grupo'},]
+    for x in groups:
+        res['data2'].append({'idContacto':x.id, 'nombre':x.nombre, 'tipo':'grupo'})
     
     res['idGrupo'] = 1
     res['fContacto_opcionesNombre'] = []
@@ -236,9 +256,7 @@ def VChat():
     
     res['mensajesAnt'] = []
     for msj in mensajes:
-        print(msj.emisor_id, end=" ")
-        print(msj.receptor_id, end=" ")
-        print(msj.contenido)
+        #print("{} {} {}".format(msj.emisor_id, msj.receptor_id, msj.contenido))
         if ((msj.emisor_id==session['idUsuario'] and msj.receptor_id==int(idChat)) or
         (msj.emisor_id==int(idChat) and msj.receptor_id==session['idUsuario'])):
             res['mensajesAnt'].append({'texto':msj.contenido, 'usuario':msj.emisor.login, 'fecha':msj.timestamp})
@@ -258,7 +276,6 @@ def VContactos():
     #Action code goes here, res should be a JSON structure
 
     usuario = Usuario.query.get(idUsuario)
-    
     contacts = Usuario.query.get(idUsuario).contacto.all()
     #print(contacts)
     
@@ -267,14 +284,6 @@ def VContactos():
     res['data1'] = []
     for x in contacts:
         res['data1'].append({'idContacto':x.id, 'nombre':x.login, 'tipo':'usuario'})
-    
-    '''res['data1'] = [
-      {'idContacto':34, 'nombre':'ana', 'tipo':'usuario'},
-      {'idContacto':23, 'nombre':'leo', 'tipo':'usuario'},
-      {'idContacto':11, 'nombre':'distra', 'tipo':'usuario'},
-      {'idContacto':40, 'nombre':'vane', 'tipo':'usuario'},
-      {'idContacto':56, 'nombre':'Grupo Est. Leng.', 'tipo':'grupo'},
-    ]'''
 
     #Action code ends here
     return json.dumps(res)
@@ -288,9 +297,10 @@ def VGrupo():
     res = {}
     if "actor" in session:
         res['actor']=session['actor']
+    if "idUsuario" in session:
+        res["idUsuario"]= session['idUsuario']
     #Action code goes here, res should be a JSON structure
     
-    res["idUsuario"]= session['idUsuario']
     res['idGrupo'] = idGrupo
 
     grupo = Grupo.query.get(idGrupo)
@@ -309,7 +319,7 @@ def VGrupo():
         if(contacto.id != usuario.id):
             res['data3'].append({'idContacto':contacto.id, 'nombre':contacto.nombre, 'tipo':'usuario'})
 
-
+    session['idGrupo'] = res['idGrupo']
     #Action code ends here
     return json.dumps(res)
 
