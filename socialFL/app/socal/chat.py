@@ -2,7 +2,7 @@ from flask import request, session, Blueprint, json
 from sqlalchemy import asc
 
 chat = Blueprint('chat', __name__)
-from base import db, Usuario, Pagina, Mensaje, Chateador
+from base import db, Usuario, Pagina, Mensaje, Chateador, Grupo
 
 @chat.route('/chat/AElimContacto')
 def AElimContacto():
@@ -222,9 +222,11 @@ def VAdminContactos():
     for x in contacts:
         res['data1'].append({'idContacto':x.id, 'nombre':x.login, 'tipo':'usuario'})
     
-    res['data2'] = [
-      {'idContacto':56, 'nombre':'Grupo Est. Leng.', 'tipo':'grupo'},
-    ]
+    groups = Grupo.query.all()
+    
+    res['data2'] = [{'idContacto':56, 'nombre':'Grupo Est. Leng.', 'tipo':'grupo'},]
+    for x in groups:
+        res['data2'].append({'idContacto':x.id, 'nombre':x.nombre, 'tipo':'grupo'})
     
     res['idGrupo'] = 1
     res['fContacto_opcionesNombre'] = []
@@ -295,9 +297,10 @@ def VGrupo():
     res = {}
     if "actor" in session:
         res['actor']=session['actor']
+    if "idUsuario" in session:
+        res["idUsuario"]= session['idUsuario']
     #Action code goes here, res should be a JSON structure
     
-    res["idUsuario"]= session['idUsuario']
     res['idGrupo'] = idGrupo
 
     grupo = Grupo.query.get(idGrupo)
@@ -316,7 +319,7 @@ def VGrupo():
         if(contacto.id != usuario.id):
             res['data3'].append({'idContacto':contacto.id, 'nombre':contacto.nombre, 'tipo':'usuario'})
 
-
+    session['idGrupo'] = res['idGrupo']
     #Action code ends here
     return json.dumps(res)
 
