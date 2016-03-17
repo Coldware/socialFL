@@ -62,7 +62,7 @@ class Usuario(Chateador):
     login = db.Column(db.String(15), index=True, unique=True)
     clave = db.Column(db.String(15))
     correo = db.Column(db.String(20), unique=True)
-    pagina_id = db.Column(db.Integer, db.ForeignKey('pagina.id'))
+    pagina = db.relationship('Pagina', backref="usuario", lazy='dynamic')
     grupo_id = db.Column(db.Integer, db.ForeignKey('grupo.id'))
     contacto = db.relationship("Usuario",
                     secondary=followers,
@@ -135,7 +135,8 @@ class Pagina(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     titulo = db.Column(db.String(20), index=True, unique=True)
     contenido = db.Column(db.Text)
-    pagina = db.relationship('Usuario', backref="pagina", lazy='dynamic')
+    pagina_id = db.Column(db.Integer, db.ForeignKey('usuario.id'))
+    #pagina = db.relationship('Usuario', backref="pagina", lazy='dynamic')
 
     def __init__(self, titulo, contenido, usuario):
         self.titulo = titulo
