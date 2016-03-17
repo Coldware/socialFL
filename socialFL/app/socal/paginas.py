@@ -15,19 +15,18 @@ def AModificarPagina():
     usuario = Usuario.query.filter_by(id=session['idUsuario']).first()
     paginaAnterior = Pagina.query.filter_by(pagina_id=usuario.id).first()
     if paginaAnterior is None: # Vemos si esta modificando o creando
-        print('CREAR PAGINA') # BORRAR
         pagina = Pagina( 
             params["titulo"],
             params["contenido"],
             usuario
         ) #Create the table in the DB
-        try: #If user is not in the DB it will register (NO ENTENDI ESTE COMENTARIO)
+        try: #If user is not in the DB it will register
             db.session.add(pagina)
             db.session.commit()
         except:
             res['msg'] = 'Ya existe el titulo en la base de datos.'
     else: # Caso Modificar
-        try: #If user is not in the DB it will register (NO ENTENDI ESTE COMENTARIO)
+        try: #If user is not in the DB it will register
             print('MODIFICAR PAGINA') # BORRAR         
             paginaAnterior.titulo = params["titulo"]
             paginaAnterior.contenido = params["contenido"]
@@ -82,14 +81,11 @@ def VMiPagina():
     #Action code goes here, res should be a JSON structure
     try: #Busco si tiene pagina
         usuario = Usuario.query.filter_by(id=idUsuario).first()
-        print (usuario) ### BORRAR
         pagina = Pagina.query.filter_by(pagina_id=usuario.id).first()
-        print (pagina) ### BORRAR
         res['titulo'] = pagina.titulo   #Devolvemos titulo y contenido
         res['contenido'] = pagina.contenido
         res['idUsuario'] = idUsuario
     except: # Si no encontramos pagina colocamos datos por defecto
-        print ('SIN PAGINA') ### BORRAR
         res['titulo'] = "El título de mi página"
         res['contenido'] = "<h3>¿No es bella mi página?</h3><p>Claro que <b>si</b>.</p>" 
     #Action code ends here
@@ -106,14 +102,11 @@ def VPagina():
     res['idPagina'] = 1
     try: #Busco si tiene pagina
         usuario = Usuario.query.filter_by(id=idUsuario).first()
-        print (usuario) ### BORRAR
         pagina = Pagina.query.filter_by(pagina_id=usuario.id).first()
-        print (pagina) ### BORRAR
         res['titulo'] = pagina.titulo   #Devolvemos titulo y contenido
         res['contenido'] = pagina.contenido
         res['idUsuario'] = idUsuario
     except: # Si no encontramos pagina colocamos datos por defecto
-        print ('SIN PAGINA') ### BORRAR
         res['titulo'] = 'Sin Pagina'
         res['contenido'] = 'Sin Pagina'
     

@@ -190,7 +190,7 @@ def VContactos():
     if "actor" in session:
         res['actor']=session['actor']
     #Action code goes here, res should be a JSON structure
-
+    res['idUsuario'] = idUsuario 
     res['idContacto'] = 1
     res['data1'] = [
       {'idContacto':34, 'nombre':'ana', 'tipo':'usuario'},
