@@ -14,7 +14,7 @@ def AModificarPagina():
     res['label'] = res['label'] + '/' + str(session['idUsuario'])
     usuario = Usuario.query.get(session['idUsuario'])
     paginaAnterior = Pagina.query.filter_by(pagina_id=usuario.id).first()
-    print(paginaAnterior)
+    #print(paginaAnterior)
 
     if paginaAnterior is None: # Vemos si esta modificando o creando
         pagina = Pagina( 
@@ -28,8 +28,7 @@ def AModificarPagina():
         except:
             res['msg'] = 'Ya existe el titulo en la base de datos.'
     else: # Caso Modificar
-        try: #If user is not in the DB it will register
-            print('MODIFICAR PAGINA') # BORRAR         
+        try: #If user is not in the DB it will register    
             paginaAnterior.titulo = params["titulo"]
             paginaAnterior.contenido = params["contenido"]
             db.session.commit()
@@ -58,9 +57,9 @@ def APagina():
     if idPagina != 'Sin Pagina':
         res = results[1]
         res['label'] = res['label'] + '/' + str(session['idUsuario'])
-        print('PAGINA EXISTE Y ES %s'%idPagina)
+        #print('PAGINA EXISTE Y ES %s'%idPagina)
     else: #Si no exite ir al editor de páginas.
-        print('PAGINA NO EXISTEY ES %s'%idPagina)
+        #print('PAGINA NO EXISTEY ES %s'%idPagina)
         res['label'] = res['label'] + '/' + str(session['idUsuario'])
 
     #Action code ends here
