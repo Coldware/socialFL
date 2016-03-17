@@ -12,7 +12,7 @@ def AModificarPagina():
     #Action code goes here, res should be a list with a label and a message
     
     res['label'] = res['label'] + '/' + str(session['idUsuario'])
-    usuario = Usuario.query.filter_by(id=session['idUsuario']).first()
+    usuario = Usuario.query.get(session['idUsuario'])
     paginaAnterior = Pagina.query.filter_by(pagina_id=usuario.id).first()
     if paginaAnterior is None: # Vemos si esta modificando o creando
         pagina = Pagina( 
@@ -80,7 +80,7 @@ def VMiPagina():
         res['actor']=session['actor']
     #Action code goes here, res should be a JSON structure
     try: #Busco si tiene pagina
-        usuario = Usuario.query.filter_by(id=idUsuario).first()
+        usuario = Usuario.query.get(idUsuario)
         pagina = Pagina.query.filter_by(pagina_id=usuario.id).first()
         res['titulo'] = pagina.titulo   #Devolvemos titulo y contenido
         res['contenido'] = pagina.contenido
@@ -90,6 +90,7 @@ def VMiPagina():
         res['contenido'] = "<h3>¿No es bella mi página?</h3><p>Claro que <b>si</b>.</p>" 
     #Action code ends here
     return json.dumps(res)
+
 
 @paginas.route('/paginas/VPagina')
 def VPagina():
@@ -101,7 +102,7 @@ def VPagina():
     #Action code goes here, res should be a JSON structure    
     res['idPagina'] = 1
     try: #Busco si tiene pagina
-        usuario = Usuario.query.filter_by(id=idUsuario).first()
+        usuario = Usuario.query.get(idUsuario)
         pagina = Pagina.query.filter_by(pagina_id=usuario.id).first()
         res['titulo'] = pagina.titulo   #Devolvemos titulo y contenido
         res['contenido'] = pagina.contenido
@@ -110,8 +111,6 @@ def VPagina():
         res['titulo'] = 'Sin Pagina'
         res['contenido'] = 'Sin Pagina'
     
-
-
     #Action code ends here
     return json.dumps(res)
 
