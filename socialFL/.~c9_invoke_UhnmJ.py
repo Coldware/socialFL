@@ -38,81 +38,37 @@ manager.add_command('db', MigrateCommand)
 
 
 
-followers = db.Table('followers',
+user_to_user = db.Table('user_to_user',
     db.Column("follower_id", db.Integer, db.ForeignKey("usuario.id")),
     db.Column("followed_id", db.Integer, db.ForeignKey("usuario.id"))
 )
 
-miembros = db.Table('miembros',
-    db.Column("member_id", db.Integer, db.ForeignKey("usuario.id")),
-    db.Column("group_id", db.Integer, db.ForeignKey("grupo.id"))
+member_to_group = db.Table('member_to_group',
+    db.Column('member_id', db.Integer, db.ForeignKey('usuario.id')),
+    db.Column('group_id', db.Integer, db.ForeignKey('grupo.id'))
 )
 
 class Chateador(db.Model):
     __tablename__ = 'chateador'
-    __mapper_args__ = {'polymorphic_identity': 'chateador'}
     id = db.Column(db.Integer, primary_key=True)
-    receptor = db.relationship("Mensaje", backref="receptor", lazy='dynamic', foreign_keys = 'Mensaje.receptor_id')
-
-class Usuario(Chateador):
-    __tablename__ = 'usuario'
-    __mapper_args__ = {'polymorphic_identity': 'usuario'}
-    id = db.Column(db.Integer, db.ForeignKey('chateador.id'), primary_key=True)
-    nombre = db.Column(db.String(15))
-    login = db.Column(db.String(15), index=True, unique=True)
-    clave = db.Column(db.String(15))
-    correo = db.Column(db.String(20), unique=True)
-    pagina_id = db.Column(db.Integer, db.ForeignKey('pagina.id'))
-    grupo_id = db.Column(db.Integer, db.ForeignKey('grupo.id'))
-    contacto = db.relationship("Usuario",
-                    secondary=followers,
-                    primaryjoin=(followers.c.follower_id == id),
-                    secondaryjoin=(followers.c.followed_id == id),
-                    backref=db.backref("followers", lazy='dynamic'),
-                    lazy='dynamic'
-    )
-    emisor = db.relationship("Mensaje", backref="emisor", lazy='dynamic', foreign_keys = 'Mensaje.emisor_id')
-
-    def __init__(self, nombre, login, clave, correo):
-        self.nombre = nombre
-        self.login = login
-        self.clave = clave
-        self.correo = correo
-    
-    def __repr__(self):
-        return '<USUARIO {}>'.format(self.login)
-    
-    def addContact(self, usuario):
-        if not self.esContacto(usuario):
-            self.contacto.append(usuario)
-            return self
-    
-    def delContact(self, usuario):
-        if self.esContacto(usuario):
-            self.contacto.remove(usuario)
-            return self
-    
-    def esContacto(self, usuario):
-        return self.contacto.filter(followers.c.followed_id == usuario.id).count() > 0
+    chat = db.relationship("Mensaje", backref="chateador", lazy='dynamic')
 
 class Grupo(Chateador):
     __tablename__ = 'grupo'
     __mapper_args__ = {'polymorphic_identity': 'grupo'}
     id = db.Column(db.Integer, db.ForeignKey('chateador.id'), primary_key=True)
     nombre = db.Column(db.String(20))
-    duenio = db.Column(db.Integer)
     miembros = db.relationship("Usuario",
-                    secondary=miembros,
-                    #primaryjoin=(miembros.c.member_id == id),
-                    #secondaryjoin=(miembros.c.group_id == id),
-                    backref=db.backref("grupos", lazy='dynamic'), 
+                    secondary=member_to_group,
+                    primaryjoin=id==member_to_group.c.member_id,
+                    secondaryjoin=id==member_to_group.c.group_id,
+                    backref=db.backref("grupo", lazy='dynamic'),
                     lazy='dynamic'
                     )
+    duenio = db.Column(db.Integer)
     
-    def __init__(self, nombre, duenio):
+    def __init__(self, nombre):
         self.nombre = nombre
-        self.duenio = duenio
-        self.miembros.append(Usuario.query.get(duenio))
     
     def __repr__(self):
         return '<GRUPO {}>'.format(self.nombre)
@@ -128,14 +84,62 @@ class Grupo(Chateador):
             return self
     
     def esMiembro(self, miembro):
-        return self.miembros.filter(miembros.c.member_id == miembro.id).count() > 0
+        return self.miembros.filter(member_to_group.c.member_id == miembro.id).count() > 0
+
+
+class Usuario(Chateador):
+    __tablename__ = 'usuario'
+    __mapper_args__ = {'polymorphic_identity': 'usuario'}
+    id = db.Column(db.Integer, db.ForeignKey('chateador.id'), primary_key=True)
+    nombre = db.Column(db.String(15))
+    login = db.Column(db.String(15), index=True, unique=True)
+    clave = db.Column(db.String(15))
+    correo = db.Column(db.String(20))
+    pagina = db.relationship('Pagina', backref="usuario", lazy='dynamic')
+    grupo_id = db.Column(db.Integer, db.ForeignKey('grupo.id'))
+    contacto = db.relationship("Usuario",
+                    secondary=user_to_user,
+                    primaryjoin=id==user_to_user.c.follower_id,
+                    secondaryjoin=id==user_to_user.c.followed_id,
+                    backref=db.backref("followed_by", lazy='dynamic'),
+                    lazy='dynamic'
+    )
+    mensaje = db.relationship("Mensaje", backref="autor", lazy='dynamic')
+
+    def __init__(self, nombre, login, clave, correo):
+        self.nombre = nombre
+        self.login = login
+        self.clave = clave
+        self.correo = correo
+    
+    def __repr__(self):
+        return '<USUARIO --> id:{} login:{}>'.format(self.id, self.login)
+    
+    def addPage(self, pagina):
+        self.pagina.append(pagina)
+    
+    def delPage(self, pagina):
+        self.pagina.remove(pagina)
+    
+    def addContact(self, usuario):
+        if not self.esContacto(usuario):
+            self.contacto.append(usuario)
+            return self
+    
+    def delContact(self, usuario):
+        if self.esContacto(usuario):
+            self.contacto.remove(usuario)
+            return self
+    
+    def esContacto(self, usuario):
+        return self.contacto.filter(user_to_user.c.followed_id == usuario.id).count() > 0
 
 class Pagina(db.Model):
     __tablename__ = 'pagina'
     id = db.Column(db.Integer, primary_key=True)
     titulo = db.Column(db.String(20), index=True, unique=True)
     contenido = db.Column(db.Text)
-    pagina = db.relationship('Usuario', backref="pagina", lazy='dynamic')
+    pagina_id = db.Column(db.Integer, db.ForeignKey('usuario.id'))
 
     def __init__(self, titulo, contenido, usuario):
         self.titulo = titulo
@@ -143,25 +147,25 @@ class Pagina(db.Model):
         self.usuario = usuario
     
     def __repr__(self):
-        return '<PAGINA --> titulo:{} usuario:{}>'.format(self.titulo, self.usuario.login)
+        return '<PAGINA --> id:{} titulo:{} usuario:{}>'.format(self.id, self.titulo, self.usuario.login)
 
 class Mensaje(db.Model):
     __tablename__ = 'mensaje'
     id = db.Column(db.Integer, primary_key=True)
     contenido = db.Column(db.Text)
-    timestamp = db.Column(db.DateTime)
-    emisor_id = db.Column(db.Integer, db.ForeignKey('usuario.id'))
-    receptor_id = db.Column(db.Integer, db.ForeignKey('chateador.id'))
+    fecha = db.Column(db.DateTime)
+    chateador_id = db.Column(db.Integer, db.ForeignKey('chateador.id'))
+    mensaje_id = db.Column(db.Integer, db.ForeignKey('usuario.id'))
     
-    def __init__(self, contenido, timestamp=None):
+    def __init__(self, contenido, fecha=None):
         self.contenido = contenido
-        if timestamp is None:
-            self.timestamp = datetime.utcnow()
+        if fecha is None:
+            self.fecha = datetime.utcnow()
         else:
-            self.timestamp = timestamp
+            self.fecha = fecha
     
     def __repr__(self):
-        return '<MENSAJE --> {}>'.format(self.contenido)
+        return '<MENSAJE --> id:{} contenido:{} fecha:{}>'.format(self.id, self.contenido, self.fecha)
 
 
 
@@ -180,3 +184,40 @@ if __name__ == '__main__':
       SECRET_KEY = repr(SystemRandom().random())
     )
     manager.run()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
