@@ -277,13 +277,15 @@ def VContactos():
 
     usuario = Usuario.query.get(idUsuario)
     contacts = Usuario.query.get(idUsuario).contacto.all()
-    #print(contacts)
+    groups = Usuario.query.get(idUsuario).grupos.all()
     
     res['idContacto'] = 1
     res['idUsuario'] = idUsuario
     res['data1'] = []
     for x in contacts:
         res['data1'].append({'idContacto':x.id, 'nombre':x.login, 'tipo':'usuario'})
+    for y in groups:
+        res['data1'].append({'idContacto':y.id, 'nombre':y.nombre, 'tipo':'grupo'})
 
     #Action code ends here
     return json.dumps(res)
