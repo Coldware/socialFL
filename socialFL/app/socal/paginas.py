@@ -14,6 +14,8 @@ def AModificarPagina():
     res['label'] = res['label'] + '/' + str(session['idUsuario'])
     usuario = Usuario.query.get(session['idUsuario'])
     paginaAnterior = Pagina.query.filter_by(pagina_id=usuario.id).first()
+    print(paginaAnterior)
+
     if paginaAnterior is None: # Vemos si esta modificando o creando
         pagina = Pagina( 
             params["titulo"],
@@ -34,7 +36,7 @@ def AModificarPagina():
         except:
             res['msg'] = 'Ya existe el titulo en la base de datos.'    
     db.session.close()
-    
+
     #Action code ends here
     if "actor" in res:
         if res['actor'] is None:
@@ -113,7 +115,3 @@ def VPagina():
     
     #Action code ends here
     return json.dumps(res)
-
-
-
-
