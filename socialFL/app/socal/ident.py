@@ -25,7 +25,7 @@ def AIdentificar():
             session.pop("actor", None)
         else:
             session['actor'] = res['actor']            
-            session['idUsuario'] = res['idUsuario'] # Este idUsuario es el Login(nombre) 
+            session['idUsuario'] = res['idUsuario'] # Este idUsuario es el id 
     return json.dumps(res)
 
 
