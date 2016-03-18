@@ -49,8 +49,12 @@ def AElimMiembro():
 
     grupo = Grupo.query.get(session['idGrupo'])
     usuario = Usuario.query.get(id)
-    grupo.delMember(usuario)
-    db.session.commit()
+    if grupo.duenio!=usuario.id:
+        grupo.delMember(usuario)
+        db.session.commit()
+    else:
+        res['msg'] = 'Miembro es dueño del grupo'
+    
 
     #Action code ends here
     if "actor" in res:
@@ -119,12 +123,14 @@ def ASalirGrupo():
         
         if(grupo.miembros.count()==0):
             db.session.delete(grupo)
+        else:
+            grupo.duenio = grupo.miembros.first().id
         
         db.session.commit()
     except:
         res = results[1]
 
-    res['label'] = res['label'] + '/' + session['idUsuario']
+    res['label'] = res['label'] + '/' + str(session['idUsuario'])
 
     #Action code ends here
     if "actor" in res:
@@ -224,9 +230,12 @@ def VAdminContactos():
     
     groups = Grupo.query.all()
     
-    res['data2'] = [{'idContacto':56, 'nombre':'Grupo Est. Leng.', 'tipo':'grupo'},]
+    #res['data2'] = [{'idContacto':56, 'nombre':'Grupo Est. Leng.', 'tipo':'grupo'},]
+    res['data2'] = []
     for x in groups:
-        res['data2'].append({'idContacto':x.id, 'nombre':x.nombre, 'tipo':'grupo'})
+        print("{} {}".format(user, x.miembros.all()))
+        if user in x.miembros.all():
+            res['data2'].append({'idContacto':x.id, 'nombre':x.nombre, 'tipo':'grupo'})
     
     res['idGrupo'] = 1
     res['fContacto_opcionesNombre'] = []
