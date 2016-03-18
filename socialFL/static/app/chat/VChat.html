@@ -39,7 +39,10 @@
 
 
 <div id="right"></div><script type="text/ng-template" id="ayuda_VChat.html">
-Manual...<ul>
+<p> Página de chat.</p>
+<p> Escriba en la caja de texto el mensaje que quiere mostrar al contacto o grupo y luego presione el botón de Escribir para enviar el mensaje.</p>
+<p> El botón de salir cierra la sesión de usuario.</p>
+<ul>
   <li ng-repeat="msg in mensajesAnt">De {{msg.usuario}}, el {{msg.fecha}}: {{msg.texto}}</li>
 </ul>
 </script>
