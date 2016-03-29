@@ -99,13 +99,15 @@ ngDialog.open({ template: 'ayuda_VAdminContactos.html',
         showClose: true, closeByDocument: true, closeByEscape: true});
 }
     }]);
+
 socialModule.controller('VChatController', 
-   ['$scope', '$location', '$route', '$timeout', 'flash', '$routeParams', 'ngDialog', 'chatService', 'identService',
-    function ($scope, $location, $route, $timeout, flash, $routeParams, ngDialog, chatService, identService) {
+   ['$scope', '$location', '$rootScope', '$route', '$timeout', 'flash', '$routeParams', '$interval', '$http', 'ngDialog', 'chatService', 'identService',
+    function ($scope, $location, $rootScope, $route, $timeout, flash, $routeParams, $interval, $http, ngDialog, chatService, identService) {
       $scope.msg = '';
       $scope.fChat = {};
 
       chatService.VChat({"idChat":$routeParams.idChat}).then(function (object) {
+        console.log(object.data);
         $scope.res = object.data;
         for (var key in object.data) {
           $scope[key] = object.data[key];
@@ -114,16 +116,22 @@ socialModule.controller('VChatController',
           $location.path('/');
         }
       });
-      /*
-      var app=angular.module('refresh_ul',[])
-      .controller('refresh_control',function($scope,$interval){
-        var c=0;
-        $scope.message="This DIV is refreshed "+c+" time.";
-        $interval(function(){
-          $scope.message="This DIV is refreshed "+c+" time.";
-          c++;
-        },4000);
-      });*/
+      
+      $scope.reload = function () {
+        $http({
+            url: 'chat/VChat',
+            method: "GET",
+            params: {idChat: $routeParams.idChat}
+        }).success(function (data) {
+            $scope.mensajesAnt = data.mensajesAnt;
+        });
+
+        $timeout(function(){
+            $scope.reload();
+        },4000)
+      };
+      
+      $scope.reload();
       
       $scope.VLogin0 = function() {
         $location.path('/VLogin');

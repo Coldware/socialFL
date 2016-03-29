@@ -258,7 +258,7 @@ def VChat():
         res['actor']=session['actor']
     #Action code goes here, res should be a JSON structure
 
-    res['idChat'] = 1
+    res['idChat'] = idChat
     res['idUsuario'] = idUsuario
     session['idChat'] = idChat
     
