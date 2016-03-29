@@ -1,5 +1,6 @@
 from flask import request, session, Blueprint, json
 from sqlalchemy import asc
+import time
 
 chat = Blueprint('chat', __name__)
 from base import db, Usuario, Pagina, Mensaje, Chateador, Grupo
@@ -250,25 +251,32 @@ def VAdminContactos():
 @chat.route('/chat/VChat')
 def VChat():
     #GET parameter
-    idChat = request.args['idChat']
+    idChat = int(request.args['idChat'])
+    idUsuario = session['idUsuario']
     res = {}
     if "actor" in session:
         res['actor']=session['actor']
     #Action code goes here, res should be a JSON structure
 
-    res['idChat'] = 1
-    res['idUsuario'] = session['idUsuario']
-    session['idChat'] = int(idChat)
+    res['idChat'] = idChat
+    res['idUsuario'] = idUsuario
+    session['idChat'] = idChat
     
     mensajes = Mensaje.query.order_by(asc(Mensaje.timestamp)).all()
-    #print(mensajes)
     
-    res['mensajesAnt'] = []
-    for msj in mensajes:
-        #print("{} {} {}".format(msj.emisor_id, msj.receptor_id, msj.contenido))
-        if ((msj.emisor_id==session['idUsuario'] and msj.receptor_id==int(idChat)) or
-        (msj.emisor_id==int(idChat) and msj.receptor_id==session['idUsuario'])):
-            res['mensajesAnt'].append({'texto':msj.contenido, 'usuario':msj.emisor.login, 'fecha':msj.timestamp})
+    if Usuario.query.get(idChat)!=None:
+        res['mensajesAnt'] = [
+            {'texto':msj.contenido,'usuario':msj.emisor.login, 'fecha':msj.timestamp}
+            for msj in mensajes
+            if ( (msj.emisor_id==idUsuario and msj.receptor_id==idChat) or
+            (msj.emisor_id==idChat and msj.receptor_id==idUsuario) )
+        ]
+    else:
+        res['mensajesAnt'] = [
+            {'texto':msj.contenido,'usuario':msj.emisor.login, 'fecha':msj.timestamp}
+            for msj in mensajes
+            if msj.receptor_id==idChat
+        ]
 
     #Action code ends here
     return json.dumps(res)

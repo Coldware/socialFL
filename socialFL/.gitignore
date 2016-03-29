@@ -1,4 +1,5 @@
 apl.db
-README.txt
 migrations/
-static/
+__pycache__/
+app/__pycache__/
+app/socal/__pycache__/

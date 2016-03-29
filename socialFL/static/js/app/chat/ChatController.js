@@ -99,23 +99,40 @@ ngDialog.open({ template: 'ayuda_VAdminContactos.html',
         showClose: true, closeByDocument: true, closeByEscape: true});
 }
     }]);
+
 socialModule.controller('VChatController', 
-   ['$scope', '$location', '$route', '$timeout', 'flash', '$routeParams', 'ngDialog', 'chatService', 'identService',
-    function ($scope, $location, $route, $timeout, flash, $routeParams, ngDialog, chatService, identService) {
+   ['$scope', '$location', '$rootScope', '$route', '$timeout', 'flash', '$routeParams', '$interval', '$http', 'ngDialog', 'chatService', 'identService',
+    function ($scope, $location, $rootScope, $route, $timeout, flash, $routeParams, $interval, $http, ngDialog, chatService, identService) {
       $scope.msg = '';
       $scope.fChat = {};
 
       chatService.VChat({"idChat":$routeParams.idChat}).then(function (object) {
+        console.log(object.data);
         $scope.res = object.data;
         for (var key in object.data) {
-            $scope[key] = object.data[key];
+          $scope[key] = object.data[key];
         }
         if ($scope.logout) {
-            $location.path('/');
+          $location.path('/');
         }
-
-
       });
+      
+      $scope.reload = function () {
+        $http({
+            url: 'chat/VChat',
+            method: "GET",
+            params: {idChat: $routeParams.idChat}
+        }).success(function (data) {
+            $scope.mensajesAnt = data.mensajesAnt;
+        });
+
+        $timeout(function(){
+            $scope.reload();
+        },4000)
+      };
+      
+      $scope.reload();
+      
       $scope.VLogin0 = function() {
         $location.path('/VLogin');
       };
