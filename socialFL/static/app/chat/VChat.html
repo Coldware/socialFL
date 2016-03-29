@@ -27,8 +27,8 @@
     </div>
 </nav>
 
-<ul ng-controller="refresh_control" ng-app="refresh_ul">
-    {{message}}
+<!-- <ul ng-controller="refresh_control" ng-app="refresh_ul"> -->
+<ul>
     <li ng-repeat="msg in mensajesAnt">De {{msg.usuario}}, el {{msg.fecha}}: {{msg.texto}}</li>
 </ul>
 
@@ -39,7 +39,7 @@
         <p ng-show="fChatSubmitted && fChatForm.texto.$invalid" class="help-block">Error en campo Texto.</p>
     </div>
     <button type="submit" class="btn btn-perso btn-lg btn-block">
-        <span class="glyphicon glyphicon-flash"></span>Escribir Cualquier Cosa
+        <span class="glyphicon glyphicon-flash"></span>Escribir
     </button>
 </form>
 <hr />

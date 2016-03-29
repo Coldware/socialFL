@@ -114,7 +114,7 @@ socialModule.controller('VChatController',
           $location.path('/');
         }
       });
-      
+      /*
       var app=angular.module('refresh_ul',[])
       .controller('refresh_control',function($scope,$interval){
         var c=0;
@@ -123,7 +123,7 @@ socialModule.controller('VChatController',
           $scope.message="This DIV is refreshed "+c+" time.";
           c++;
         },4000);
-      });
+      });*/
       
       $scope.VLogin0 = function() {
         $location.path('/VLogin');
