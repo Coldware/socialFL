@@ -27,8 +27,9 @@
     </div>
 </nav>
 
-<ul>
-  <li ng-repeat="msg in mensajesAnt">De {{msg.usuario}}, el {{msg.fecha}}: {{msg.texto}}</li>
+<ul ng-controller="refresh_control" ng-app="refresh_ul">
+    {{message}}
+    <li ng-repeat="msg in mensajesAnt">De {{msg.usuario}}, el {{msg.fecha}}: {{msg.texto}}</li>
 </ul>
 
 <form name="fChatForm" ng-submit="AEscribir1(fChatForm.$valid)" novalidate>

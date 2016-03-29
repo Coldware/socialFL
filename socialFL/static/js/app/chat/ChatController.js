@@ -105,18 +105,26 @@ socialModule.controller('VChatController',
       $scope.msg = '';
       $scope.fChat = {};
 
-      setInterval(
-        chatService.VChat({"idChat":$routeParams.idChat}).then(function (object) {
-          $scope.res = object.data;
-          for (var key in object.data) {
-            $scope[key] = object.data[key];
-          }
-          if ($scope.logout) {
-              $location.path('/');
-          }
-          4000);
-
+      chatService.VChat({"idChat":$routeParams.idChat}).then(function (object) {
+        $scope.res = object.data;
+        for (var key in object.data) {
+          $scope[key] = object.data[key];
+        }
+        if ($scope.logout) {
+          $location.path('/');
+        }
       });
+      
+      var app=angular.module('refresh_ul',[])
+      .controller('refresh_control',function($scope,$interval){
+        var c=0;
+        $scope.message="This DIV is refreshed "+c+" time.";
+        $interval(function(){
+          $scope.message="This DIV is refreshed "+c+" time.";
+          c++;
+        },4000);
+      });
+      
       $scope.VLogin0 = function() {
         $location.path('/VLogin');
       };
