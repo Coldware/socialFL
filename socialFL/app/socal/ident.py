@@ -10,7 +10,7 @@ def AIdentificar():
     results = [{'label':'/VPrincipal', 'msg':'!Bienvenido '+params['usuario']+'!', "actor":"duenoProducto","idUsuario":params['usuario']},{'label':'/VLogin','msg':['Datos de identificación incorrectos']}, ]
     res = results[0]
     #Action code goes here, res should be a list with a label and a message
-    
+
     try: #If the information exists and is correct then u can login
         usuario = Usuario.query.filter_by(login=params['usuario']).first()
         if usuario.clave!=params['clave']:
@@ -37,7 +37,7 @@ def ARegistrar():
     results = [{'label':'/VLogin', 'msg':['Felicitaciones, Ya estás registrado en la aplicación']}, {'label':'/VRegistro', 'msg':['Error al tratar de registrarse']}, ]
     res = results[0]
     #Action code goes here, res should be a list with a label and a message
-    
+
     usuario = Usuario(
         params['nombre'],
         params['usuario'],
@@ -51,7 +51,7 @@ def ARegistrar():
     except:
         res = results[1]
     db.session.close()
-    
+
     #Action code ends here
     if "actor" in res:
         if res['actor'] is None:
@@ -69,7 +69,7 @@ def VLogin():
     if "actor" in session:
         res['actor']=session['actor']
     #Action code goes here, res should be a JSON structure
-    
+
     session.clear()
 
     #Action code ends here
@@ -95,7 +95,9 @@ def VPrincipal():
             print ('SIN PAGINA')     
     else:
         print (session)    
-    
+
+    res['idPaginaSitio'] = 35
+
     #Action code ends here
     return json.dumps(res)
 

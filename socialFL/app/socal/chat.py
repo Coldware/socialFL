@@ -25,7 +25,7 @@ def AElimContacto():
         db.session.commit()
     except:
         res = results[1]
-    
+
     res['label'] = res['label'] + '/' + str(idUsuario)
 
     #Action code ends here
@@ -95,9 +95,9 @@ def AEscribir():
         x = test.contenido
     except:
         res = results[1]
-    
+
     res['label'] = res['label'] + '/' + str(session['idChat'])
-    
+
     #Action code ends here
     if "actor" in res:
         if res['actor'] is None:
@@ -150,7 +150,7 @@ def AgregContacto():
     results = [{'label':'/VAdminContactos', 'msg':['Contacto agregado']}, {'label':'/VAdminContactos', 'msg':['No se pudo agregar contacto']}, ]
     res = results[0]
     #Action code goes here, res should be a list with a label and a message
-    
+
     idUsuario = session['idUsuario']
 
     user = Usuario.query.get(idUsuario)
@@ -164,9 +164,9 @@ def AgregContacto():
         db.session.commit()
     else:
         res = results[1]
-    
+
     res['label'] = res['label'] + '/' + str(idUsuario)
-    
+
     #Action code ends here
     if "actor" in res:
         if res['actor'] is None:
@@ -184,7 +184,7 @@ def AgregMiembro():
     results = [{'label':'/VGrupo', 'msg':['Nuevo miembro agregado']}, {'label':'/VGrupo', 'msg':['No se pudo agregar al nuevo miembro']}, ]
     res = results[0]
     #Action code goes here, res should be a list with a label and a message
-    
+
     res['label'] = res['label'] + '/' + session['idGrupo']
 
     grupo = Grupo.query.get(session['idGrupo'])
@@ -210,7 +210,7 @@ def VAdminContactos():
     if "actor" in session:
         res['actor']=session['actor']
     #Action code goes here, res should be a JSON structure
-    
+
     res['idContacto'] = 1
     
     user = Usuario.query.get(idUsuario)
@@ -242,6 +242,8 @@ def VAdminContactos():
     res['fContacto_opcionesNombre'] = []
     for x in unknown:
         res['fContacto_opcionesNombre'].append({'key':x.id, 'value':x.login})
+    res['fContacto'] = {'idCOntacto':1}
+    
 
     #Action code ends here
     return json.dumps(res)
@@ -295,7 +297,7 @@ def VContactos():
     usuario = Usuario.query.get(idUsuario)
     contacts = Usuario.query.get(idUsuario).contacto.all()
     groups = Usuario.query.get(idUsuario).grupos.all()
-    
+
     res['idContacto'] = 1
     res['idUsuario'] = idUsuario
     res['data1'] = []
@@ -319,7 +321,7 @@ def VGrupo():
     if "idUsuario" in session:
         res["idUsuario"]= session['idUsuario']
     #Action code goes here, res should be a JSON structure
-    
+
     res['idGrupo'] = idGrupo
 
     grupo = Grupo.query.get(idGrupo)
@@ -337,6 +339,8 @@ def VGrupo():
     for contacto in grupo.miembros:
         if(contacto.id != usuario.id):
             res['data3'].append({'idContacto':contacto.id, 'nombre':contacto.nombre, 'tipo':'usuario'})
+
+    res['fMiembro'] = {'idUsuario':1, 'idGrupo':2}
 
     session['idGrupo'] = res['idGrupo']
     #Action code ends here

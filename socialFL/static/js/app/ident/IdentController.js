@@ -12,8 +12,8 @@ socialModule.config(['$routeProvider', function ($routeProvider) {
 }]);
 
 socialModule.controller('VLoginController', 
-   ['$scope', '$location', '$route', '$timeout', 'flash', 'chatService', 'identService', 'paginasService',
-    function ($scope, $location, $route, $timeout, flash, chatService, identService, paginasService) {
+   ['$scope', '$location', '$route', '$timeout', 'flash', 'chatService', 'foroService', 'identService', 'paginasService',
+    function ($scope, $location, $route, $timeout, flash, chatService, foroService, identService, paginasService) {
       $scope.msg = '';
       $scope.fLogin = {};
 
@@ -49,8 +49,8 @@ socialModule.controller('VLoginController',
 
     }]);
 socialModule.controller('VPrincipalController', 
-   ['$scope', '$location', '$route', '$timeout', 'flash', 'chatService', 'identService', 'paginasService',
-    function ($scope, $location, $route, $timeout, flash, chatService, identService, paginasService) {
+   ['$scope', '$location', '$route', '$timeout', 'flash', 'chatService', 'foroService', 'identService', 'paginasService',
+    function ($scope, $location, $route, $timeout, flash, chatService, foroService, identService, paginasService) {
       $scope.msg = '';
       identService.VPrincipal().then(function (object) {
         $scope.res = object.data;
@@ -78,11 +78,17 @@ socialModule.controller('VPrincipalController',
       $scope.VContactos2 = function(idUsuario) {
         $location.path('/VContactos/'+idUsuario);
       };
+      $scope.VForos3 = function(idUsuario) {
+        $location.path('/VForos/'+idUsuario);
+      };
+      $scope.VComentariosPagina4 = function(idPaginaSitio) {
+        $location.path('/VComentariosPagina/'+idPaginaSitio);
+      };
 
     }]);
 socialModule.controller('VRegistroController', 
-   ['$scope', '$location', '$route', '$timeout', 'flash', 'chatService', 'identService', 'paginasService',
-    function ($scope, $location, $route, $timeout, flash, chatService, identService, paginasService) {
+   ['$scope', '$location', '$route', '$timeout', 'flash', 'chatService', 'foroService', 'identService', 'paginasService',
+    function ($scope, $location, $route, $timeout, flash, chatService, foroService, identService, paginasService) {
       $scope.msg = '';
       $scope.fUsuario = {};
 
