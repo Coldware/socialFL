@@ -10,7 +10,7 @@ def AModificarPagina():
     results = [{'label':'/VPagina', 'msg':['Cambios almacenados']}, ]
     res = results[0]
     #Action code goes here, res should be a list with a label and a message
-    
+
     res['label'] = res['label'] + '/' + str(session['idUsuario'])
     usuario = Usuario.query.get(session['idUsuario'])
     paginaAnterior = Pagina.query.filter_by(pagina_id=usuario.id).first()
@@ -43,6 +43,7 @@ def AModificarPagina():
         else:
             session['actor'] = res['actor']
     return json.dumps(res)
+
 
 
 @paginas.route('/paginas/APagina')
@@ -89,8 +90,11 @@ def VMiPagina():
     except: # Si no encontramos pagina colocamos datos por defecto
         res['titulo'] = "El título de mi página"
         res['contenido'] = "<h3>¿No es bella mi página?</h3><p>Claro que <b>si</b>.</p>" 
+    
+
     #Action code ends here
     return json.dumps(res)
+
 
 
 @paginas.route('/paginas/VPagina')
@@ -100,7 +104,8 @@ def VPagina():
     res = {}
     if "actor" in session:
         res['actor']=session['actor']
-    #Action code goes here, res should be a JSON structure    
+    #Action code goes here, res should be a JSON structure
+
     res['idPagina'] = 1
     try: #Busco si tiene pagina
         usuario = Usuario.query.get(idUsuario)
@@ -111,6 +116,16 @@ def VPagina():
     except: # Si no encontramos pagina colocamos datos por defecto
         res['titulo'] = 'Sin Pagina'
         res['contenido'] = 'Sin Pagina'
-    
+
     #Action code ends here
     return json.dumps(res)
+
+
+
+
+
+#Use case code starts here
+
+
+#Use case code ends here
+

@@ -1,4 +1,3 @@
-
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -13,6 +12,9 @@
         </div>
         <div class="collapse navbar-collapse" id="contenido-plegable">
             <ul class="nav navbar-nav navbar-left">
+<li><a ng-click="AgregGrupo4(idUsuario)">
+  Agregar Grupo</a></li>
+
             </ul>
             <ul class="nav navbar-nav navbar-right">
 <li class="navbar-text" ng-show="usuario.nombre" ng-bind="usuario.nombre"></li>
@@ -46,6 +48,7 @@
 
 <hr />    <form name="fContactoForm" ng-submit="AgregContacto3(fContactoForm.$valid)" novalidate>
             <div class="form-group" ng-class="{ 'has-error' :  fContactoSubmitted && fContactoForm.nombre.$invalid && fContactoForm.nombre.$pristine && fContactoSubmitted}"><label for="fContacto_nombre">Nombre</label>:&nbsp;<select id="fContacto_nombre" ng-model="fContacto.nombre" required ng-options="item.key as item.value for item in fContacto_opcionesNombre"></select><p ng-show="fContactoSubmitted && fContactoForm.nombre.$invalid" class="help-block">Error en campo Nombre.</p></div>
+            <input id="fContacto_idUsuario" type="hidden" name="idUsuario" ng-model="fContacto.idUsuario" />
         <button type="submit" class="btn btn-perso btn-lg btn-block">
             <span class="glyphicon glyphicon-flash"></span>Agregar contacto
         </button>

@@ -1,5 +1,5 @@
 from flask import Flask, session
-from flask.ext.script import Manager, Server, prompt_bool
+from flask.ext.script import Manager, Server
 from random import SystemRandom
 from datetime import timedelta
 from datetime import datetime
@@ -175,6 +175,8 @@ from app.socal.paginas import paginas
 app.register_blueprint(paginas)
 from app.socal.chat import chat
 app.register_blueprint(chat)
+from app.socal.foro import foro
+app.register_blueprint(foro)
 
 if __name__ == '__main__':
     app.config.update(

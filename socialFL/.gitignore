@@ -3,3 +3,4 @@ migrations/
 __pycache__/
 app/__pycache__/
 app/socal/__pycache__/
+*.orig

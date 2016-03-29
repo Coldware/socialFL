@@ -31,6 +31,8 @@
 
     <form name="fMiembroForm" ng-submit="AgregMiembro0(fMiembroForm.$valid)" novalidate>
             <div class="form-group" ng-class="{ 'has-error' :  fMiembroSubmitted && fMiembroForm.nombre.$invalid && fMiembroForm.nombre.$pristine && fMiembroSubmitted}"><label for="fMiembro_nombre">Nombre</label>:&nbsp;<select id="fMiembro_nombre" ng-model="fMiembro.nombre" required ng-options="item.key as item.value for item in fMiembro_opcionesNombre"></select><p ng-show="fMiembroSubmitted && fMiembroForm.nombre.$invalid" class="help-block">Error en campo Nombre.</p></div>
+            <div class="form-group" ng-class="{ 'has-error' :  fMiembroSubmitted && fMiembroForm.idUsuario.$invalid && fMiembroForm.idUsuario.$pristine && fMiembroSubmitted}"><label for="fMiembro_idUsuario"></label><input id="fMiembro_idUsuario" type="text" name="idUsuario" class="form-control" ng-model="fMiembro.idUsuario" placeholder="" /><p ng-show="fMiembroSubmitted && fMiembroForm.idUsuario.$invalid" class="help-block">Error en campo .</p></div>
+            <input id="fMiembro_idGrupo" type="hidden" name="idGrupo" ng-model="fMiembro.idGrupo" />
         <button type="submit" class="btn btn-perso btn-lg btn-block">
             <span class="glyphicon glyphicon-flash"></span>Agregar
         </button>
