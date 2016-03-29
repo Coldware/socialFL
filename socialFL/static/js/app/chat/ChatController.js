@@ -101,13 +101,12 @@ ngDialog.open({ template: 'ayuda_VAdminContactos.html',
     }]);
 
 socialModule.controller('VChatController', 
-   ['$scope', '$location', '$rootScope', '$route', '$timeout', 'flash', '$routeParams', '$interval', '$http', 'ngDialog', 'chatService', 'identService',
-    function ($scope, $location, $rootScope, $route, $timeout, flash, $routeParams, $interval, $http, ngDialog, chatService, identService) {
+   ['$scope', '$location', '$route', '$timeout', 'flash', '$routeParams', '$http', 'ngDialog', 'chatService', 'identService',
+    function ($scope, $location, $route, $timeout, flash, $routeParams, $http, ngDialog, chatService, identService) {
       $scope.msg = '';
       $scope.fChat = {};
 
       chatService.VChat({"idChat":$routeParams.idChat}).then(function (object) {
-        console.log(object.data);
         $scope.res = object.data;
         for (var key in object.data) {
           $scope[key] = object.data[key];
@@ -126,7 +125,7 @@ socialModule.controller('VChatController',
             $scope.mensajesAnt = data.mensajesAnt;
         });
 
-        $timeout(function(){
+        time=$timeout(function(){
             $scope.reload();
         },4000)
       };
@@ -134,9 +133,11 @@ socialModule.controller('VChatController',
       $scope.reload();
       
       $scope.VLogin0 = function() {
+        $timeout.cancel(time);
         $location.path('/VLogin');
       };
       $scope.VContactos2 = function(idUsuario) {
+        $timeout.cancel(time);
         $location.path('/VContactos/'+idUsuario);
       };
 
@@ -149,6 +150,7 @@ socialModule.controller('VChatController',
               var msg = object.data["msg"];
               if (msg) flash(msg);
               var label = object.data["label"];
+              $timeout.cancel(time);
               $location.path(label);
               $route.reload();
           });
