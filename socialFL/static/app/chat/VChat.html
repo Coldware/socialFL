@@ -29,16 +29,22 @@
 
 <ul>
   <li ng-repeat="msg in mensajesAnt">De {{msg.usuario}}, el {{msg.fecha}}: {{msg.texto}}</li>
-</ul>    <form name="fChatForm" ng-submit="AEscribir1(fChatForm.$valid)" novalidate>
-            <div class="form-group" ng-class="{ 'has-error' :  fChatSubmitted && fChatForm.texto.$invalid && fChatForm.texto.$pristine && fChatSubmitted}"><label for="fChat_texto">Texto</label><textarea id="fChat_texto" name="texto" class="form-control" ng-model="fChat.texto" placeholder="Texto" required></textarea><p ng-show="fChatSubmitted && fChatForm.texto.$invalid" class="help-block">Error en campo Texto.</p></div>
-        <button type="submit" class="btn btn-perso btn-lg btn-block">
-            <span class="glyphicon glyphicon-flash"></span>Escribir
-        </button>
-    </form>
-    <hr />
+</ul>
 
+<form name="fChatForm" ng-submit="AEscribir1(fChatForm.$valid)" novalidate>
+    <div class="form-group" ng-class="{ 'has-error' :  fChatSubmitted && fChatForm.texto.$invalid && fChatForm.texto.$pristine && fChatSubmitted}">
+        <label for="fChat_texto">Texto</label>
+        <textarea id="fChat_texto" name="texto" class="form-control" ng-model="fChat.texto" placeholder="Texto" required></textarea>
+        <p ng-show="fChatSubmitted && fChatForm.texto.$invalid" class="help-block">Error en campo Texto.</p>
+    </div>
+    <button type="submit" class="btn btn-perso btn-lg btn-block">
+        <span class="glyphicon glyphicon-flash"></span>Escribir
+    </button>
+</form>
+<hr />
 
-<div id="right"></div><script type="text/ng-template" id="ayuda_VChat.html">
+<div id="right"></div>
+<script type="text/ng-template" id="ayuda_VChat.html">
 <p> Página de chat.</p>
 <p> Escriba en la caja de texto el mensaje que quiere mostrar al contacto o grupo y luego presione el botón de Escribir para enviar el mensaje.</p>
 <p> El botón de salir cierra la sesión de usuario.</p>

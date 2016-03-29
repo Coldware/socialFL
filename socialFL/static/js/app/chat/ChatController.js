@@ -105,15 +105,16 @@ socialModule.controller('VChatController',
       $scope.msg = '';
       $scope.fChat = {};
 
-      chatService.VChat({"idChat":$routeParams.idChat}).then(function (object) {
-        $scope.res = object.data;
-        for (var key in object.data) {
+      setInterval(
+        chatService.VChat({"idChat":$routeParams.idChat}).then(function (object) {
+          $scope.res = object.data;
+          for (var key in object.data) {
             $scope[key] = object.data[key];
-        }
-        if ($scope.logout) {
-            $location.path('/');
-        }
-
+          }
+          if ($scope.logout) {
+              $location.path('/');
+          }
+          4000);
 
       });
       $scope.VLogin0 = function() {
