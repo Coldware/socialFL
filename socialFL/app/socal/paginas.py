@@ -13,8 +13,8 @@ def AModificarPagina():
 
     res['label'] = res['label'] + '/' + str(session['idUsuario'])
     usuario = Usuario.query.get(session['idUsuario'])
-    paginaAnterior = Pagina.query.filter_by(pagina_id=usuario.id).first()
-    #print(paginaAnterior)
+    paginaAnterior = Pagina.query.filter_by(usuario_id=usuario.id).first()
+    print(paginaAnterior)
 
     if paginaAnterior is None: # Vemos si esta modificando o creando
         pagina = Pagina( 
@@ -33,8 +33,7 @@ def AModificarPagina():
             paginaAnterior.contenido = params["contenido"]
             db.session.commit()
         except:
-            res['msg'] = 'Ya existe el titulo en la base de datos.'    
-    db.session.close()
+            res['msg'] = 'Ya existe el titulo en la base de datos.'
 
     #Action code ends here
     if "actor" in res:
@@ -58,9 +57,7 @@ def APagina():
     if idPagina != 'Sin Pagina':
         res = results[1]
         res['label'] = res['label'] + '/' + str(session['idUsuario'])
-        #print('PAGINA EXISTE Y ES %s'%idPagina)
     else: #Si no exite ir al editor de páginas.
-        #print('PAGINA NO EXISTEY ES %s'%idPagina)
         res['label'] = res['label'] + '/' + str(session['idUsuario'])
 
     #Action code ends here
@@ -83,13 +80,14 @@ def VMiPagina():
     #Action code goes here, res should be a JSON structure
     try: #Busco si tiene pagina
         usuario = Usuario.query.get(idUsuario)
-        pagina = Pagina.query.filter_by(pagina_id=usuario.id).first()
+        pagina = Pagina.query.filter_by(usuario_id=usuario.id).first()
         res['titulo'] = pagina.titulo   #Devolvemos titulo y contenido
         res['contenido'] = pagina.contenido
         res['idUsuario'] = idUsuario
     except: # Si no encontramos pagina colocamos datos por defecto
         res['titulo'] = "El título de mi página"
-        res['contenido'] = "<h3>¿No es bella mi página?</h3><p>Claro que <b>si</b>.</p>" 
+        res['contenido'] = "<h3>¿No es bella mi página?</h3><p>Claro que <b>si</b>.</p>"
+    print(res)
     
 
     #Action code ends here
@@ -109,13 +107,14 @@ def VPagina():
     res['idPagina'] = 1
     try: #Busco si tiene pagina
         usuario = Usuario.query.get(idUsuario)
-        pagina = Pagina.query.filter_by(pagina_id=usuario.id).first()
+        pagina = Pagina.query.filter_by(usuario_id=usuario.id).first()
         res['titulo'] = pagina.titulo   #Devolvemos titulo y contenido
         res['contenido'] = pagina.contenido
         res['idUsuario'] = idUsuario
     except: # Si no encontramos pagina colocamos datos por defecto
         res['titulo'] = 'Sin Pagina'
         res['contenido'] = 'Sin Pagina'
+    print(res)
 
     #Action code ends here
     return json.dumps(res)

@@ -19,7 +19,7 @@ manager.add_command("runserver", Server(
 @app.before_request
 def make_session_permanent():
     session.permanent = True
-    app.permanent_session_lifetime = timedelta(minutes=45)
+    app.permanent_session_lifetime = timedelta(minutes=30)
     session.modified = True
 
 @app.route('/')
@@ -48,11 +48,13 @@ miembros = db.Table('miembros',
     db.Column("group_id", db.Integer, db.ForeignKey("grupo.id"))
 )
 
+
 class Chateador(db.Model):
     __tablename__ = 'chateador'
     __mapper_args__ = {'polymorphic_identity': 'chateador'}
     id = db.Column(db.Integer, primary_key=True)
-    receptor = db.relationship("Mensaje", backref="receptor", lazy='dynamic', foreign_keys = 'Mensaje.receptor_id')
+    receptor = db.relationship("Mensaje", backref="receptor", lazy='dynamic', foreign_keys='Mensaje.receptor_id')
+
 
 class Usuario(Chateador):
     __tablename__ = 'usuario'
@@ -71,7 +73,7 @@ class Usuario(Chateador):
                     backref=db.backref("followers", lazy='dynamic'),
                     lazy='dynamic'
     )
-    emisor = db.relationship("Mensaje", backref="emisor", lazy='dynamic', foreign_keys = 'Mensaje.emisor_id')
+    emisor = db.relationship("Mensaje", backref="emisor", lazy='dynamic', foreign_keys='Mensaje.emisor_id')
 
     def __init__(self, nombre, login, clave, correo):
         self.nombre = nombre
@@ -94,6 +96,7 @@ class Usuario(Chateador):
     
     def esContacto(self, usuario):
         return self.contacto.filter(followers.c.followed_id == usuario.id).count() > 0
+
 
 class Grupo(Chateador):
     __tablename__ = 'grupo'
@@ -130,21 +133,6 @@ class Grupo(Chateador):
     def esMiembro(self, miembro):
         return self.miembros.filter(miembros.c.member_id == miembro.id).count() > 0
 
-class Pagina(db.Model):
-    __tablename__ = 'pagina'
-    id = db.Column(db.Integer, primary_key=True)
-    titulo = db.Column(db.String(20), index=True, unique=True)
-    contenido = db.Column(db.Text)
-    pagina_id = db.Column(db.Integer, db.ForeignKey('usuario.id'))
-    #pagina = db.relationship('Usuario', backref="pagina", lazy='dynamic')
-
-    def __init__(self, titulo, contenido, usuario):
-        self.titulo = titulo
-        self.contenido = contenido
-        self.usuario = usuario
-    
-    def __repr__(self):
-        return '<PAGINA --> titulo:{} usuario:{}>'.format(self.titulo, self.usuario.login)
 
 class Mensaje(db.Model):
     __tablename__ = 'mensaje'
@@ -165,6 +153,100 @@ class Mensaje(db.Model):
         return '<MENSAJE --> {}>'.format(self.contenido)
 
 
+class Pagina(db.Model):
+    __tablename__ = 'pagina'
+    id = db.Column(db.Integer, primary_key=True)
+    titulo = db.Column(db.String(20), index=True, unique=True)
+    contenido = db.Column(db.Text)
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'))
+
+    def __init__(self, titulo, contenido, usuario):
+        self.titulo = titulo
+        self.contenido = contenido
+        self.usuario = usuario
+    
+    def __repr__(self):
+        return '<PAGINA --> titulo:{} usuario:{}>'.format(self.titulo, self.usuario.login)
+
+
+class Comentable(db.Model):
+    __tablename__ = 'comentable'
+    __mapper_args__ = {'polymorphic_identity': 'comentable'}
+    id = db.Column(db.Integer, primary_key=True)
+    hilo = db.relationship('Hilo', backref="comentable", lazy='dynamic')
+
+
+class Foro(Comentable):
+    __tablename__ = 'foro'
+    id = db.Column(db.Integer, db.ForeignKey('comentable.id'), primary_key=True)
+    titulo = db.Column(db.String(20), index=True, unique=True)
+    timestamp = db.Column(db.DateTime)
+    autor = db.Column(db.Integer)
+    
+    def __init__(self, titulo, autor, timestamp=None):
+        self.titulo = titulo
+        self.autor = autor
+        if timestamp is None:
+            self.timestamp = datetime.utcnow()
+        else:
+            self.timestamp = timestamp
+    
+    def __repr__(self):
+        return '<FORO --> titulo:{} autor:{}>'.format(self.titulo, 
+        Usuario.query.get(self.autor).login)
+
+
+class PaginaSitio(Comentable):
+    __tablename__ = 'paginasitio'
+    id = db.Column(db.Integer, db.ForeignKey('comentable.id'), primary_key=True)
+    url = db.Column(db.String(30), index=True, unique=True)
+    
+    def __init__(self, url):
+        self.url = url
+    
+    def __repr__(self):
+        return '<PAGINA SITIO --> url:{}>'.format(self.url)
+
+
+class Hilo(db.Model):
+    __tablename__ = 'hilo'
+    id = db.Column(db.Integer, primary_key=True)
+    titulo = db.Column(db.String(20), index=True)
+    publicacion = db.relationship('Publicacion', backref="hilo", lazy='dynamic')
+    comentable_id = db.Column(db.Integer, db.ForeignKey('comentable.id'))
+    
+    def __init__(self, publicacion_raiz):
+        self.publicacion.append(publicacion_raiz)
+    
+    def __repr__(self):
+        return '<HILO --> {}>'.format(self.titulo)
+
+
+class Publicacion(db.Model):
+    __tablename__ = 'publicacion'
+    id = db.Column(db.Integer, primary_key=True)
+    titulo = db.Column(db.String(20), index=True)
+    contenido = db.Column(db.Text)
+    autor = db.Column(db.Integer)
+    timestamp = db.Column(db.DateTime)
+    anterior_id = db.Column(db.Integer, db.ForeignKey('publicacion.id'), index=True)
+    anterior = db.relationship('Publicacion', backref=db.backref('hijo', remote_side='Publicacion.id'))
+    hilo_id = db.Column(db.Integer, db.ForeignKey('hilo.id'))
+    
+    def __init__(self, titulo, contenido, autor, timestamp=None, anterior=None):
+        self.titulo = titulo
+        self.contenido = contenido
+        self.autor = autor
+        if anterior is not None:
+            self.anterior.append(anterior)
+        if timestamp is None:
+            self.timestamp = datetime.utcnow()
+        else:
+            self.timestamp = timestamp
+    
+    def __repr__(self):
+        return '<PUBLICACION --> titulo:{} autor:{}>'.format(self.titulo, 
+        Usuario.query.get(self.autor).login)
 
 
 #Application code ends here
