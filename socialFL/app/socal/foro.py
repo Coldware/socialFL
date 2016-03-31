@@ -1,6 +1,8 @@
 from flask import request, session, Blueprint, json
+from sqlalchemy import asc
 
 foro = Blueprint('foro', __name__)
+from base import db, Foro
 
 
 @foro.route('/foro/AComentar', methods=['POST'])
@@ -32,8 +34,27 @@ def AElimForo():
     res = results[0]
     #Action code goes here, res should be a list with a label and a message
 
-    res['label'] =res['label'] + '/' + repr(1)
-
+    res['label'] =res['label'] + '/' + str(session['idUsuario'])
+    foro = Foro.query.get(idForo)
+    
+    try:
+        if session['idUsuario']==foro.autor:
+            for hilo in foro.hilo:
+                print(hilo)
+                db.session.delete(hilo)
+            db.session.delete(foro)
+            db.session.commit()
+        else:
+            raise ValueError("No eres el dueño del foro")
+    except ValueError as ve:
+        res = results[1]
+        res['label'] =res['label'] + '/' + idForo
+    except:
+        res = results[1]
+        res['label'] =res['label'] + '/' + idForo
+    finally:
+        db.session.close()
+    
     #Action code ends here
     if "actor" in res:
         if res['actor'] is None:
@@ -71,8 +92,23 @@ def AgregForo():
     results = [{'label':'/VForos', 'msg':['Foro creado']}, {'label':'/VForos', 'msg':['No se pudo crear el foro']}, ]
     res = results[0]
     #Action code goes here, res should be a list with a label and a message
-
-    res['label'] = res['label'] + '/' + repr(1)
+    
+    idUsuario = session['idUsuario']
+    res['idUsuario'] = idUsuario
+    
+    titulo = params['titulo']
+    
+    foro = Foro(titulo, idUsuario)
+    db.session.add(foro)
+    db.session.commit()
+    
+    try: #Se prueba el exito de la creacion del foro
+        test = Foro.query.filter_by(titulo=titulo).first()
+        x = test.titulo #Si Test es None esto dara error e ira al except
+    except:
+        res = results[1]
+    
+    res['label'] = res['label'] + '/' + str(idUsuario)
 
     #Action code ends here
     if "actor" in res:
@@ -109,15 +145,25 @@ def VForo():
         res['actor']=session['actor']
     #Action code goes here, res should be a JSON structure
 
-    res['idForo'] = 1
-    res['idUsuario'] = 1
+    res['idForo'] = idForo
+    res['idUsuario'] = session['idUsuario']
     res['idMensaje'] = 0 #Nueva publicación
+    
+    foro = Foro.query.get(idForo)
+    hilos = foro.hilo
+    
+    res['data0'] = [
+        {'idMensaje':hilo.id, 'titulo':hilo.titulo} for hilo in hilos
+    ]
+    
+    '''
     res['data0'] = [
       {'idMensaje':1, 'titulo':'Puntos por tarea'},
       {'idMensaje':2, 'titulo':'Re:Puntos por tarea'},
       {'idMensaje':3, 'titulo':'Voy adelantado'}
     ]
-
+    '''
+    
     #Action code ends here
     return json.dumps(res)
 
@@ -132,10 +178,10 @@ def VForos():
         res['actor']=session['actor']
     #Action code goes here, res should be a JSON structure
 
+    foros = Foro.query.order_by(asc(Foro.timestamp)).all()
+
     res['data0'] = [
-      {'idForo':1, 'nombre':'Sobre Scrum'},
-      {'idForo':2, 'nombre':'Sobre El producto'},
-      {'idForo':3, 'nombre':'Sobre la fiesta del sábado'}
+        {'idForo':foro.id, 'nombre':foro.titulo} for foro in foros
     ]
 
     #Action code ends here
