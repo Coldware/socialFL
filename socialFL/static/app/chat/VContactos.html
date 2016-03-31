@@ -13,17 +13,17 @@
         <div class="collapse navbar-collapse" id="contenido-plegable">
             <ul class="nav navbar-nav navbar-left">
 <li><a ng-click="VAdminContactos2(idUsuario)">
-  <b>Administrar contactos</b></a></li>
+  <b>Administrar contactos </b></a></li>
 
             </ul>
             <ul class="nav navbar-nav navbar-right">
 <li class="navbar-text" ng-show="usuario.nombre" ng-bind="usuario.nombre"></li>
-<li><a ng-click="__ayuda()"><i class="fa fa-info-circle fa-lg"></i></a></li>
+<li><a ng-click="__ayuda()"><i class="fa fa-info-circle fa-lg" data-toggle="tooltip" title="Información" ></i></a></li>
 <li><a ng-click="VPrincipal0()"
        ng-show="actor=='desarrollador' || actor=='duenoProducto' || actor=='maestroScrum' || false">
-    <i class="fa fa-arrow-circle-left fa-lg"></i></a></li>
+    <i class="fa fa-arrow-circle-left fa-lg" data-toggle="tooltip" title="Regresar"></i></a></li>
 <li><a ng-click="VLogin0()">
-    <i class="fa fa-power-off fa-lg"></i></a></li>
+    <i class="fa fa-power-off fa-lg" data-toggle="tooltip" title="Cerrar sesión"></i></a></li>
 
             </ul>
         </div>

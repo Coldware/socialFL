@@ -15,12 +15,12 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
 <li class="navbar-text" ng-show="usuario.nombre" ng-bind="usuario.nombre"></li>
-<li><a ng-click="__ayuda()"><i class="fa fa-info-circle fa-lg"></i></a></li>
+<li><a ng-click="__ayuda()"><i class="fa fa-info-circle fa-lg" data-toggle="tooltip" title="Informacion" ></i></a></li>
 <li><a ng-click="VContactos2(idUsuario)"
        ng-show="actor=='desarrollador' || actor=='duenoProducto' || actor=='maestroScrum' || false">
-    <i class="fa fa-arrow-circle-left fa-lg"></i></a></li>
+    <i class="fa fa-arrow-circle-left fa-lg" data-toggle="tooltip" title="Regresar"></i></a></li>
 <li><a ng-click="VLogin0()">
-    <i class="fa fa-power-off fa-lg"></i></a></li>
+    <i class="fa fa-power-off fa-lg" data-toggle="tooltip" title="Cerrar Sesion"></i></a></li>
 
             </ul>
         </div>
