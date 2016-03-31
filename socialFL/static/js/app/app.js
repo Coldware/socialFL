@@ -9,7 +9,7 @@ socialModule.config(['$routeProvider', function ($routeProvider) {
 }]);
 socialModule.controller('socialController_',  ['$scope', '$http', '$location',
 function($scope) {
-    $scope.title = "Social";
+    $scope.title = "Coldware";
 }]);
 socialModule.directive('sameAs', [function () {
     return {

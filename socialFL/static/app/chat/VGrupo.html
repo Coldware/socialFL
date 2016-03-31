@@ -8,7 +8,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <span class="navbar-brand" >Miembros del gurpo</span>
+            <span class="navbar-brand" ><b>Miembros del gurpo</b></span>
         </div>
         <div class="collapse navbar-collapse" id="contenido-plegable">
             <ul class="nav navbar-nav navbar-left">
@@ -18,11 +18,11 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
 <li class="navbar-text" ng-show="usuario.nombre" ng-bind="usuario.nombre"></li>
-<li><a ng-click="__ayuda()"><span class="glyphicon glyphicon-info-sign"></span></a></li>
+<li><a ng-click="__ayuda()"><i class="fa fa-info-circle fa-lg"></i></a></li>
 <li><a ng-click="VAdminContactos2(idUsuario)">
-    Regresar</a></li>
+    <i class="fa fa-arrow-circle-left fa-lg"></i></a></li>
 <li><a ng-click="VLogin0()">
-    Salir</a></li>
+    <i class="fa fa-sign-out fa-lg"></i></a></li>
 
             </ul>
         </div>
@@ -34,7 +34,7 @@
             <div class="form-group" ng-class="{ 'has-error' :  fMiembroSubmitted && fMiembroForm.idUsuario.$invalid && fMiembroForm.idUsuario.$pristine && fMiembroSubmitted}"><label for="fMiembro_idUsuario"></label><input id="fMiembro_idUsuario" type="text" name="idUsuario" class="form-control" ng-model="fMiembro.idUsuario" placeholder="" /><p ng-show="fMiembroSubmitted && fMiembroForm.idUsuario.$invalid" class="help-block">Error en campo .</p></div>
             <input id="fMiembro_idGrupo" type="hidden" name="idGrupo" ng-model="fMiembro.idGrupo" />
         <button type="submit" class="btn btn-perso btn-lg btn-block">
-            <span class="glyphicon glyphicon-flash"></span>Agregar
+            <i class="fa fa-asterisk"></i>  Agregar
         </button>
     </form>
     <hr />        <table ng-table="tableParams3" template-pagination="pager.html" class="table">
