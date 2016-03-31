@@ -177,6 +177,26 @@ def AgregContacto():
 
 
 
+@chat.route('/chat/AgregGrupo')
+def AgregGrupo():
+    #GET parameter
+    idUsuario = request.args['idUsuario']
+    results = [{'label':'/VAdminContactos', 'msg':['Grupo agregado']}, {'label':'/VAdminContactos', 'msg':['Error al crear grupo']}, ]
+    res = results[0]
+    #Action code goes here, res should be a list with a label and a message
+
+    res['label'] = res['label'] + '/' + str(idUsuario)
+
+    #Action code ends here
+    if "actor" in res:
+        if res['actor'] is None:
+            session.pop("actor", None)
+        else:
+            session['actor'] = res['actor']
+    return json.dumps(res)
+
+
+
 @chat.route('/chat/AgregMiembro', methods=['POST'])
 def AgregMiembro():
     #POST/PUT parameters
@@ -211,6 +231,7 @@ def VAdminContactos():
         res['actor']=session['actor']
     #Action code goes here, res should be a JSON structure
 
+    res['idUsuario'] = idUsuario
     res['idContacto'] = 1
     
     user = Usuario.query.get(idUsuario)
@@ -340,7 +361,7 @@ def VGrupo():
         if(contacto.id != usuario.id):
             res['data3'].append({'idContacto':contacto.id, 'nombre':contacto.nombre, 'tipo':'usuario'})
 
-    res['fMiembro'] = {'idUsuario':1, 'idGrupo':2}
+    res['fMiembro'] = {'idUsuario':res["idUsuario"], 'idGrupo':idGrupo}
 
     session['idGrupo'] = res['idGrupo']
     #Action code ends here
