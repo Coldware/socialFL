@@ -216,7 +216,8 @@ class Hilo(db.Model):
     publicacion = db.relationship('Publicacion', backref="hilo", lazy='dynamic')
     comentable_id = db.Column(db.Integer, db.ForeignKey('comentable.id'))
     
-    def __init__(self, publicacion_raiz):
+    def __init__(self, titulo, publicacion_raiz):
+        self.titulo = titulo
         self.publicacion.append(publicacion_raiz)
     
     def __repr__(self):

@@ -99,14 +99,16 @@ def AgregForo():
     titulo = params['titulo']
     
     foro = Foro(titulo, idUsuario)
-    db.session.add(foro)
-    db.session.commit()
     
     try: #Se prueba el exito de la creacion del foro
+        db.session.add(foro)
+        db.session.commit()
         test = Foro.query.filter_by(titulo=titulo).first()
         x = test.titulo #Si Test es None esto dara error e ira al except
     except:
         res = results[1]
+    finally:
+        db.session.close()
     
     res['label'] = res['label'] + '/' + str(idUsuario)
 
@@ -152,9 +154,18 @@ def VForo():
     foro = Foro.query.get(idForo)
     hilos = foro.hilo
     
+    '''
     res['data0'] = [
         {'idMensaje':hilo.id, 'titulo':hilo.titulo} for hilo in hilos
     ]
+    '''
+    
+    res['data0'] = []
+    for hilo in hilos:
+        res['data0'].append({'idMensaje':hilo.id, 'titulo':hilo.titulo})
+        publicaciones = hilo.publicacion
+        for publicacion in publicaciones:
+            res['data0'].append({'idMensaje':publicacion.id, 'titulo':publicacion.titulo})
     
     '''
     res['data0'] = [
