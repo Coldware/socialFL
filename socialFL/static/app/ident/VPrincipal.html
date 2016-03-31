@@ -18,8 +18,6 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
 <li class="navbar-text" ng-show="usuario.nombre" ng-bind="usuario.nombre"></li>
-<li><a ng-click="VLogin0()">
-    Salir</a></li>
 <li><a ng-click="APagina1(idPagina)"
        ng-show="actor=='desarrollador' || actor=='duenoProducto' || actor=='maestroScrum' || false">
     Página de usuario</a></li>
@@ -29,6 +27,8 @@
 <li><a ng-click="VForos3(idUsuario)"
        ng-show="actor=='desarrollador' || actor=='duenoProducto' || actor=='maestroScrum' || false">
     Foros</a></li>
+<li><a ng-click="VLogin0()">
+    Salir</a></li>
 
             </ul>
         </div>

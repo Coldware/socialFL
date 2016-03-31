@@ -34,6 +34,9 @@ socialModule.controller('VComentariosPaginaController',
         }
 
       });
+      $scope.VLogin0 = function() {
+        $location.path('/VLogin');
+      };
       $scope.VPrincipal1 = function() {
         $location.path('/VPrincipal');
       };
@@ -86,6 +89,9 @@ socialModule.controller('VForoController',
 
 
       });
+      $scope.VLogin0 = function() {
+        $location.path('/VLogin');
+      };
       $scope.VPublicacion1 = function(idMensaje) {
         $location.path('/VPublicacion/'+idMensaje);
       };
@@ -141,6 +147,9 @@ socialModule.controller('VForosController',
 
 
       });
+      $scope.VLogin0 = function() {
+        $location.path('/VLogin');
+      };
       $scope.VPrincipal1 = function() {
         $location.path('/VPrincipal');
       };
@@ -189,6 +198,9 @@ socialModule.controller('VPublicacionController',
         }
 
       });
+      $scope.VLogin0 = function() {
+        $location.path('/VLogin');
+      };
       $scope.VForo1 = function(idForo) {
         $location.path('/VForo/'+idForo);
       };
