@@ -2,7 +2,7 @@ from flask import request, session, Blueprint, json
 from sqlalchemy import asc
 
 foro = Blueprint('foro', __name__)
-from base import db, Usuario, Foro, Publicacion
+from base import db, Usuario, Foro, Publicacion, PaginaSitio
 
 
 @foro.route('/foro/AComentar', methods=['POST'])
@@ -12,6 +12,20 @@ def AComentar():
     results = [{'label':'/VPrincipal', 'msg':['Comentario realizado']}, {'label':'/VComentariosPagina', 'msg':['Error al realizar comentario']}, ]
     res = results[0]
     #Action code goes here, res should be a list with a label and a message
+
+    autor = session['idUsuario']
+    
+    try:
+        comentario = Publicacion(params['titulo'], params['contenido'], autor)
+        paginasitio = PaginaSitio.query.get(session['idPaginaSitio'])
+        paginasitio.publicacion.append(comentario)
+        db.session.add(comentario)
+        db.session.commit()
+    except:
+        res = results[1]
+        res['label'] = res['label'] + '/' + str(session['idPaginaSitio'])
+    finally:
+        db.session.close()
 
     #En caso de error
     #res['label'] = res['label'] + '/' + repr(1)
@@ -75,18 +89,23 @@ def APublicar():
 
     autor = session['idUsuario']
 
-    if session['idPublicacion'] != 0:
-        print("entre")
+    if session['idPublicacion']!=0:
         p_anterior = Publicacion.query.get(session['idPublicacion'])
-        publicacion = Publicacion(params['titulo'],params['contenido'],autor , p_anterior)
+        publicacion = Publicacion(params['titulo'], params['contenido'], autor, p_anterior)
         p_anterior.hijos.append(publicacion)
     else:
-        publicacion = Publicacion(params['titulo'],params['contenido'],autor)
+        publicacion = Publicacion(params['titulo'], params['contenido'], autor)
         foro = Foro.query.get(session['idForo'])
         foro.publicacion.append(publicacion)
     
-    db.session.add(publicacion)
-    db.session.commit()
+    try:
+        db.session.add(publicacion)
+        db.session.commit()
+    except:
+        res = results[1]
+    finally:
+        db.session.close()
+    
 
     res['label'] = res['label'] + '/' + str(session['idForo'])
     del session['idPublicacion']
@@ -175,18 +194,8 @@ def VForo():
         #print(publicacion)
         if publicacion.anterior==None:
             res['data0'].append({'idMensaje':publicacion.id, 'titulo':publicacion.titulo})
-            publicaciones_hijas = publicacion.hijos
-            for hija in publicaciones_hijas:
-                #print(hija)
-                res['data0'].append({'idMensaje':hija.id, 'titulo':hija.titulo})
-    
-    '''
-    res['data0'] = [
-      {'idMensaje':1, 'titulo':'Puntos por tarea'},
-      {'idMensaje':2, 'titulo':'Re:Puntos por tarea'},
-      {'idMensaje':3, 'titulo':'Voy adelantado'}
-    ]
-    '''
+            publicacion.imprimirhijos(res['data0'])
+                    
     session['idForo'] = res['idForo']
     
     #Action code ends here
@@ -225,7 +234,7 @@ def VPublicacion():
 
     res['idForo'] = session['idForo']
     session['idPublicacion'] = idMensaje
-    print(idMensaje)
+    #print(idMensaje)
 
     #Action code ends here
     return json.dumps(res)

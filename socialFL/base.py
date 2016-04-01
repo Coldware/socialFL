@@ -202,7 +202,7 @@ class PaginaSitio(Comentable):
     id = db.Column(db.Integer, db.ForeignKey('comentable.id'), primary_key=True)
     url = db.Column(db.String(30), index=True, unique=True)
     
-    def __init__(self, url):
+    def __init__(self, url=None):
         self.url = url
     
     def __repr__(self):
@@ -234,6 +234,12 @@ class Publicacion(db.Model):
     def __repr__(self):
         return '<PUBLICACION --> titulo:{} autor:{}>'.format(self.titulo, 
         Usuario.query.get(self.autor).login)
+    
+    def imprimirhijos(self, array):
+        for hijo in self.hijos:
+            array.append({'idMensaje':hijo.id, 'titulo':hijo.titulo})
+            hijo.imprimirhijos(array)
+        return array
 
 
 #Application code ends here

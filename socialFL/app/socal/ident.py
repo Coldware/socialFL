@@ -80,6 +80,8 @@ def VLogin():
 @ident.route('/ident/VPrincipal')
 def VPrincipal():
     res = {}
+    if 'idPaginaSitio' in session:
+        del session['idPaginaSitio']
     if "actor" in session:
         res['actor']=session['actor']
         res['idPagina'] = 'Sin Pagina'
@@ -94,10 +96,11 @@ def VPrincipal():
         except: 
             print ('SIN PAGINA')     
     else:
-        print (session)    
+        print(session)    
 
-    res['idPaginaSitio'] = 35
-
+    res['idPaginaSitio'] = 1
+    session['idPaginaSitio'] = res['idPaginaSitio']
+    
     #Action code ends here
     return json.dumps(res)
 
