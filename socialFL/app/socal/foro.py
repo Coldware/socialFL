@@ -2,7 +2,7 @@ from flask import request, session, Blueprint, json
 from sqlalchemy import asc
 
 foro = Blueprint('foro', __name__)
-from base import db, Foro
+from base import db, Usuario, Foro, Publicacion
 
 
 @foro.route('/foro/AComentar', methods=['POST'])
@@ -73,8 +73,24 @@ def APublicar():
     res = results[0]
     #Action code goes here, res should be a list with a label and a message
 
-    res['label'] = res['label'] + '/' + repr(1)
+    autor = session['idUsuario']
 
+    if session['idPublicacion'] != 0:
+        print("entre")
+        p_anterior = Publicacion.query.get(session['idPublicacion'])
+        publicacion = Publicacion(params['titulo'],params['contenido'],autor , p_anterior)
+        p_anterior.hijos.append(publicacion)
+    else:
+        publicacion = Publicacion(params['titulo'],params['contenido'],autor)
+        foro = Foro.query.get(session['idForo'])
+        foro.publicacion.append(publicacion)
+    
+    db.session.add(publicacion)
+    db.session.commit()
+
+    res['label'] = res['label'] + '/' + str(session['idForo'])
+    del session['idPublicacion']
+    
     #Action code ends here
     if "actor" in res:
         if res['actor'] is None:
@@ -131,7 +147,7 @@ def VComentariosPagina():
         res['actor']=session['actor']
     #Action code goes here, res should be a JSON structure
 
-    res['idPagina'] = 1
+    res['idPagina'] = idPaginaSitio
 
     #Action code ends here
     return json.dumps(res)
@@ -171,6 +187,7 @@ def VForo():
       {'idMensaje':3, 'titulo':'Voy adelantado'}
     ]
     '''
+    session['idForo'] = res['idForo']
     
     #Action code ends here
     return json.dumps(res)
@@ -200,13 +217,15 @@ def VForos():
 @foro.route('/foro/VPublicacion')
 def VPublicacion():
     #GET parameter
-    idMensaje = request.args['idMensaje']
+    idMensaje = int(request.args['idMensaje'])
     res = {}
     if "actor" in session:
         res['actor']=session['actor']
     #Action code goes here, res should be a JSON structure
 
-    res['idForo'] = 1
+    res['idForo'] = session['idForo']
+    session['idPublicacion'] = idMensaje
+    print(idMensaje)
 
     #Action code ends here
     return json.dumps(res)
