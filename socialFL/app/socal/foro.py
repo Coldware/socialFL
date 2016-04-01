@@ -54,7 +54,6 @@ def AElimForo():
         res['label'] =res['label'] + '/' + idForo
     finally:
         db.session.close()
-        db.session.close()
     
     #Action code ends here
     if "actor" in res:
