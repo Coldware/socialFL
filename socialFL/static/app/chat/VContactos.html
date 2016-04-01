@@ -8,22 +8,22 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <span class="navbar-brand" >Mis contactos y grupos</span>
+            <span class="navbar-brand" ><i class="fa fa-users"></i> <b> Mis contactos y grupos</b></span>
         </div>
         <div class="collapse navbar-collapse" id="contenido-plegable">
             <ul class="nav navbar-nav navbar-left">
 <li><a ng-click="VAdminContactos2(idUsuario)">
-  Administrar contactos</a></li>
+  <b>Administrar contactos </b></a></li>
 
             </ul>
             <ul class="nav navbar-nav navbar-right">
 <li class="navbar-text" ng-show="usuario.nombre" ng-bind="usuario.nombre"></li>
-<li><a ng-click="__ayuda()"><span class="glyphicon glyphicon-info-sign"></span></a></li>
+<li><a ng-click="__ayuda()"><i class="fa fa-info-circle fa-lg" data-toggle="tooltip" title="Información" ></i></a></li>
 <li><a ng-click="VPrincipal0()"
        ng-show="actor=='desarrollador' || actor=='duenoProducto' || actor=='maestroScrum' || false">
-    Regresar</a></li>
+    <i class="fa fa-arrow-circle-left fa-lg" data-toggle="tooltip" title="Regresar"></i></a></li>
 <li><a ng-click="VLogin0()">
-    Salir</a></li>
+    <i class="fa fa-power-off fa-lg" data-toggle="tooltip" title="Cerrar sesión"></i></a></li>
 
             </ul>
         </div>
@@ -43,10 +43,10 @@
 
 <div id="right"></div><script type="text/ng-template" id="ayuda_VContactos.html">
 <p> Página para ver los contactos de la lista del usuario, para poder seleccionar un chat en específico.</p>
-<p> Botones:</p>
-<p> Administrar Contactos: Redirecciona a la página de administrar contactos, donde se puede agregar y eliminar usuarios de la lista de contactos, y gestionar grupos.</p>
-<p> Regresar: Lleva de vuelta a la página anterior.</p>
-<p> Salir: Cierra sesión de usuario.</p>
-<p> Chat: Abre la ventana de chat con el contacto seleccionado.</p>
+<a> <b>Botones</b></a>
+<p><b>Chat</b>: Abre la ventana de chat con el contacto seleccionado.</p>
+<p><b>Administrar Contactos</b>: Redirecciona a la página de administrar contactos, donde se puede agregar y eliminar usuarios de la lista de contactos, y gestionar grupos.</p>
+<p><b>Regresar</b>: Lleva de vuelta a la página anterior.</p>
+<p><b>Salir</b>: Cierra sesión de usuario.</p>
 
 </script>
