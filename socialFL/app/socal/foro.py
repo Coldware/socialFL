@@ -39,9 +39,9 @@ def AElimForo():
     
     try:
         if session['idUsuario']==foro.autor:
-            for hilo in foro.hilo:
-                print(hilo)
-                db.session.delete(hilo)
+            for publicacion in foro.publicacion:
+                print(publicacion)
+                db.session.delete(publicacion)
             db.session.delete(foro)
             db.session.commit()
         else:
@@ -152,20 +152,17 @@ def VForo():
     res['idMensaje'] = 0 #Nueva publicación
     
     foro = Foro.query.get(idForo)
-    hilos = foro.hilo
-    
-    '''
-    res['data0'] = [
-        {'idMensaje':hilo.id, 'titulo':hilo.titulo} for hilo in hilos
-    ]
-    '''
+    publicaciones = foro.publicacion
     
     res['data0'] = []
-    for hilo in hilos:
-        res['data0'].append({'idMensaje':hilo.id, 'titulo':hilo.titulo})
-        publicaciones = hilo.publicacion
-        for publicacion in publicaciones:
+    for publicacion in publicaciones:
+        #print(publicacion)
+        if publicacion.anterior==None:
             res['data0'].append({'idMensaje':publicacion.id, 'titulo':publicacion.titulo})
+            publicaciones_hijas = publicacion.hijos
+            for hija in publicaciones_hijas:
+                #print(hija)
+                res['data0'].append({'idMensaje':hija.id, 'titulo':hija.titulo})
     
     '''
     res['data0'] = [
