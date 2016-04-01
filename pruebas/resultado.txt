@@ -1,0 +1,93 @@
+test1_crear_Usuario (__main__.unitTest) ... ok
+test2_add_contacts (__main__.unitTest) ... ok
+test3_crear_Grupo (__main__.unitTest) ... ok
+test4_addMember (__main__.unitTest) ... ok
+test5_delMember (__main__.unitTest) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.721s
+
+OK
+test_registro_coldware (__main__.NuevoRegistro) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 47.465s
+
+OK
+test_crear_exito (__main__.NuevoModificar) ... ok
+test_crear_titleVacio (__main__.NuevoModificar) ... ok
+test_crear_tituloMenor (__main__.NuevoModificar) ... ok
+test_crear_tituloMin (__main__.NuevoModificar) ... ok
+test_modificar_exito (__main__.NuevoModificar) ... ok
+test_modificar_titleVacio (__main__.NuevoModificar) ... ok
+test_modificar_tituloMenor (__main__.NuevoModificar) ... ok
+test_modificar_tituloMin (__main__.NuevoModificar) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 120.613s
+
+OK
+test_contactos_coldware (__main__.ColdwareContacto) ... ok
+test_contactos_verificacion (__main__.ColdwareContacto) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 129.565s
+
+OK
+test_chat (__main__.ColdwareChat) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 26.696s
+
+OK
+test1_crearGrupo (__main__.ColdwareGrupo) ... ok
+test_agregarMiembros (__main__.ColdwareGrupo) ... ok
+test_elimMiembros (__main__.ColdwareGrupo) ... ok
+test_verMiembros (__main__.ColdwareGrupo) ... ok
+test_verMiembros_Chat (__main__.ColdwareGrupo) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 129.285s
+
+OK
+test_registro_claveMax (__main__.RegistroPrueba) ... ok
+test_registro_claveMayor (__main__.RegistroPrueba) ... ok
+test_registro_claveMenor (__main__.RegistroPrueba) ... ok
+test_registro_claveMin (__main__.RegistroPrueba) ... ok
+test_registro_correoVacio (__main__.RegistroPrueba) ... ok
+test_registro_exito (__main__.RegistroPrueba) ... ok
+test_registro_nombreMax (__main__.RegistroPrueba) ... ok
+test_registro_nombreMayor (__main__.RegistroPrueba) ... ok
+test_registro_nombreVacio (__main__.RegistroPrueba) ... ok
+test_registro_usuarioExistente (__main__.RegistroPrueba) ... ok
+test_registro_usuarioMax (__main__.RegistroPrueba) ... ok
+test_registro_usuarioMayor (__main__.RegistroPrueba) ... ok
+test_registro_usuarioVacio (__main__.RegistroPrueba) ... ok
+test_registro_vacios (__main__.RegistroPrueba) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 181.807s
+
+OK
+test_login_claveMal (__main__.loginPrueba) ... ok
+test_login_claveVacio (__main__.loginPrueba) ... ok
+test_login_exito (__main__.loginPrueba) ... ok
+test_login_usuarioMal (__main__.loginPrueba) ... ok
+test_login_usuarioVacio (__main__.loginPrueba) ... ok
+test_login_vacio (__main__.loginPrueba) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 41.942s
+
+OK
+test1_crearForo (__main__.foroPrueba) ... ok
+test2_crearForo_mismoNombre (__main__.foroPrueba) ... ok
+test3_verForo_otroUsuario (__main__.foroPrueba) ... ok
+test4_elimForo_otroUsuario (__main__.foroPrueba) ... ok
+test5_elimForo (__main__.foroPrueba) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 64.686s
+
+OK
+
