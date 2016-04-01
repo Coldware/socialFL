@@ -4,6 +4,7 @@ from sqlalchemy import asc
 foro = Blueprint('foro', __name__)
 from base import db, Usuario, Foro, Publicacion
 
+
 @foro.route('/foro/AComentar', methods=['POST'])
 def AComentar():
     #POST/PUT parameters
@@ -33,7 +34,6 @@ def AElimForo():
     res = results[0]
     #Action code goes here, res should be a list with a label and a message
 
-
     res['label'] =res['label'] + '/' + str(session['idUsuario'])
     foro = Foro.query.get(idForo)
     
@@ -54,7 +54,8 @@ def AElimForo():
         res['label'] =res['label'] + '/' + idForo
     finally:
         db.session.close()
-
+        db.session.close()
+    
     #Action code ends here
     if "actor" in res:
         if res['actor'] is None:
@@ -108,7 +109,7 @@ def AgregForo():
     results = [{'label':'/VForos', 'msg':['Foro creado']}, {'label':'/VForos', 'msg':['No se pudo crear el foro']}, ]
     res = results[0]
     #Action code goes here, res should be a list with a label and a message
-
+    
     idUsuario = session['idUsuario']
     res['idUsuario'] = idUsuario
     
@@ -179,6 +180,27 @@ def VForo():
             for hija in publicaciones_hijas:
                 #print(hija)
                 res['data0'].append({'idMensaje':hija.id, 'titulo':hija.titulo})
+    
+    '''
+    res['data0'] = [
+      {'idMensaje':1, 'titulo':'Puntos por tarea'},
+      {'idMensaje':2, 'titulo':'Re:Puntos por tarea'},
+      {'idMensaje':3, 'titulo':'Voy adelantado'}
+    ]
+    '''
+    
+    foro = Foro.query.get(idForo)
+    publicaciones = foro.publicacion
+    
+    res['data0'] = []
+    for publicacion in publicaciones:
+        #print(publicacion)
+        if publicacion.anterior==None:
+            res['data0'].append({'idMensaje':publicacion.id, 'titulo':publicacion.titulo})
+            publicaciones_hijas = publicacion.hijos
+            for hija in publicaciones_hijas:
+                #print(hija)
+                res['data0'].append({'idMensaje':hija.id, 'titulo':hija.titulo})
 
     session['idForo'] = res['idForo']
     #Action code ends here
@@ -195,8 +217,8 @@ def VForos():
         res['actor']=session['actor']
     #Action code goes here, res should be a JSON structure
 
-
     foros = Foro.query.order_by(asc(Foro.timestamp)).all()
+
 
     res['data0'] = [
         {'idForo':foro.id, 'nombre':foro.titulo} for foro in foros

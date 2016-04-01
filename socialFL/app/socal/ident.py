@@ -7,7 +7,7 @@ from base import db, Usuario , Pagina
 def AIdentificar():
     #POST/PUT parameters
     params = request.get_json()
-    results = [{'label':'/VPrincipal', 'msg':'!Bienvenido '+params['usuario']+'!', "actor":"duenoProducto","idUsuario":params['usuario']},{'label':'/VLogin','msg':['Datos de identificación incorrectos']}, ]
+    results = [{'label':'/VPrincipal', 'msg':'¡Bienvenido '+params['usuario']+'!', "actor":"duenoProducto","idUsuario":params['usuario']},{'label':'/VLogin','msg':['Datos de identificación incorrectos']}, ]
     res = results[0]
     #Action code goes here, res should be a list with a label and a message
 
