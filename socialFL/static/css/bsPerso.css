@@ -12,8 +12,8 @@ a.bg-perso:hover {
 }
 .btn-perso {
   color: #fff;
-  background-color: #669933;//#5bc0de;
-  border-color: #669933;//#46b8da;
+  background-color: #6666ff;//#5bc0de;
+  border-color: #6666ff;//#46b8da;
 }
 .btn-perso:hover,
 .btn-perso:focus,
@@ -22,8 +22,8 @@ a.bg-perso:hover {
 .btn-perso.active,
 .open > .dropdown-toggle.btn-perso {
   color: #fff;
-  background-color: #557722;//#31b0d5;
-  border-color: #336633;//#269abc;
+  background-color: #3288e6;//#31b0d5;
+  border-color: #3288e6;//#269abc;
 }
 .btn-perso:active,
 .btn-perso.active,

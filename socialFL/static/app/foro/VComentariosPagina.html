@@ -8,17 +8,19 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <span class="navbar-brand" >Comentarios de la página</span>
+            <span class="navbar-brand" ><i class="fa fa-comments"></i><b> Comentarios de la página</b></span>
         </div>
         <div class="collapse navbar-collapse" id="contenido-plegable">
             <ul class="nav navbar-nav navbar-left">
             </ul>
             <ul class="nav navbar-nav navbar-right">
 <li class="navbar-text" ng-show="usuario.nombre" ng-bind="usuario.nombre"></li>
-<li><a ng-click="__ayuda()"><span class="glyphicon glyphicon-info-sign"></span></a></li>
+<li><a ng-click="__ayuda()"><i class="fa fa-info-circle fa-lg" data-toggle="tooltip" title="Informacion" ></i></a></li>
 <li><a ng-click="VPrincipal1()"
        ng-show="actor=='desarrollador' || actor=='duenoProducto' || actor=='maestroScrum' || false">
-    Regresar</a></li>
+    <i class="fa fa-arrow-circle-left fa-lg" data-toggle="tooltip" title="Regresar"></i></a></li>
+<li><a ng-click="VLogin0()">
+    <i class="fa fa-power-off fa-lg" data-toggle="tooltip" title="Cerrar sesión"></i></i></a></li>
 
             </ul>
         </div>
@@ -38,5 +40,11 @@
 
 
 <div id="right"></div><script type="text/ng-template" id="ayuda_VComentariosPagina.html">
-Doc de comentarios de página
+<p> Página donde se escribe una contribución a una página.
+<p><b>Fecha</b>: Se coloca la fecha de la publicación. </p>
+<p><b>Título</b>: Encabezado que describe la contribución. </p>
+<p><b>Contenido</b>: Texto que describe la publicación realizada.</p>
+<p><b>Botones</b></p>
+<p><b>Regresar</b>: Redirecciona a la página anterior.</p>
+<p><b>Salir</b>: Cierra sesión de usuario.</p>
 </script>

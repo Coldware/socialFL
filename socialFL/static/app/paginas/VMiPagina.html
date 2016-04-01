@@ -8,21 +8,23 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <span class="navbar-brand" >{{titulo}}</span>
+            <span class="navbar-brand" ><b>{{titulo}}</b></span>
         </div>
         <div class="collapse navbar-collapse" id="contenido-plegable">
             <ul class="nav navbar-nav navbar-left">
 <li><a ng-click="VPagina2(idUsuario)"
        ng-show="actor=='desarrollador' || actor=='duenoProducto' || actor=='maestroScrum' || false">
-  Modificar</a></li>
+  <b>Modificar</b></a></li>
 
             </ul>
             <ul class="nav navbar-nav navbar-right">
 <li class="navbar-text" ng-show="usuario.nombre" ng-bind="usuario.nombre"></li>
-<li><a ng-click="__ayuda()"><span class="glyphicon glyphicon-info-sign"></span></a></li>
+<li><a ng-click="__ayuda()"><i class="fa fa-info-circle fa-lg" data-toggle="tooltip" title="Informacion"></i></a></li>
 <li><a ng-click="VPrincipal1()"
        ng-show="actor=='desarrollador' || actor=='duenoProducto' || actor=='maestroScrum' || false">
-    Regresar</a></li>
+    <i class="fa fa-arrow-circle-left fa-lg" data-toggle="tooltip" title="Regresar"></i></a></li>
+<li><a ng-click="VLogin0()">
+    <i class="fa fa-power-off fa-lg" data-toggle="tooltip" title="Cerrar Sesion"></i></a></li>
 
             </ul>
         </div>
@@ -36,6 +38,9 @@
 <div id="right"></div><script type="text/ng-template" id="ayuda_VMiPagina.html">
 <div style="text-align: center;">Para modificar la información de su página debe 
 posicionarse en el botón de modificar.<br/></div>
+<p><b>Botones</b></p>
+<p><b>Regresar</b>: Redirecciona a la página anterior.</p>
+<p><b>Salir</b>: Cierra sesión de usuario.</p>
 <div ng-bind-html="contenido"></div>
 
 </script>
