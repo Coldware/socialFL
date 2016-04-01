@@ -62,6 +62,8 @@ socialModule.controller('VAdminContactosController',
       $scope.VPrincipal0 = function() {
         $location.path('/VPrincipal');
       };
+      
+      
       $scope.AgregGrupo4 = function(idUsuario) {
           
         chatService.AgregGrupo({"idUsuario":((typeof idUsuario === 'object')?JSON.stringify(idUsuario):idUsuario)}).then(function (object) {
@@ -78,6 +80,21 @@ socialModule.controller('VAdminContactosController',
         if (isValid) {
           
           chatService.AgregContacto($scope.fContacto).then(function (object) {
+              var msg = object.data["msg"];
+              if (msg) flash(msg);
+              var label = object.data["label"];
+              $location.path(label);
+              $route.reload();
+          });
+        }
+      };
+      
+      $scope.fGrupoSubmitted = false;
+      $scope.AgregGrupo5 = function(isValid) {
+        $scope.fGrupoSubmitted = true;
+        if (isValid) {
+          
+          chatService.AgregGrupos($scope.fGrupo).then(function (object) {
               var msg = object.data["msg"];
               if (msg) flash(msg);
               var label = object.data["label"];

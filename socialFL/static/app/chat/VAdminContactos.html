@@ -11,11 +11,11 @@
             <span class="navbar-brand" ><i class="fa fa-users"></i> <b> Administración de  contactos y grupos</b></span>
         </div>
         <div class="collapse navbar-collapse" id="contenido-plegable">
-            <ul class="nav navbar-nav navbar-left">
+            <!--<ul class="nav navbar-nav navbar-left">
 <li><a ng-click="AgregGrupo4(idUsuario)">
   <b>Agregar Grupo</b></a></li>
 
-            </ul>
+            </ul>-->
             <ul class="nav navbar-nav navbar-right">
 <li class="navbar-text" ng-show="usuario.nombre" ng-bind="usuario.nombre"></li>
 <li><a ng-click="__ayuda()"><i class="fa fa-info-circle fa-lg" data-toggle="tooltip" title="Informacion"></i></a></li>
@@ -54,6 +54,18 @@
         </button>
     </form>
     <hr />
+
+<form name="fGrupoForm" ng-submit="AgregGrupo5(fGrupoForm.$valid)" novalidate>
+    <div class="form-group" ng-class="{ 'has-error' :  fGrupoSubmitted && fGrupoForm.nombre.$invalid && fGrupoForm.nombre.$pristine && fGrupoSubmitted}">
+        <label for="fGrupo_nombre">Nombre</label>
+        <input id="fGrupo_nombre" type="text" name="nombre" class="form-control" ng-model="fGrupo.nombre" placeholder="Nombre" />
+        <p ng-show="fGrupoSubmitted && fGrupoForm.nombre.$invalid" class="help-block">Error en campo Nombre.</p>
+    </div>
+    <button type="submit" class="btn btn-perso btn-lg btn-block">
+        <i class="fa fa-asterisk"></i>  Crear Grupo
+    </button>
+</form>
+<hr />
 
 
 <div id="right"></div><script type="text/ng-template" id="ayuda_VAdminContactos.html">
