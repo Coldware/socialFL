@@ -197,6 +197,40 @@ def AgregGrupo():
 
 
 
+@chat.route('/chat/AgregGrupos', methods=['POST'])
+def AgregGrupos():
+    #POST/PUT parameters
+    params = request.get_json()
+    results = [{'label':'/VAdminContactos', 'msg':['Grupo agregado']}, {'label':'/VAdminContactos', 'msg':['Error al crear grupo']}, ]
+    res = results[0]
+    #Action code goes here, res should be a list with a label and a message
+
+    idUsuario = session['idUsuario']
+
+    titulo = params['nombre']
+    
+    grupo = Grupo(titulo, idUsuario)
+    
+    try: #Se prueba el exito de la creacion del foro
+        db.session.add(grupo)
+        db.session.commit()
+    except:
+        res = results[1]
+    finally:
+        db.session.close()
+
+    res['label'] = res['label'] + '/' + str(idUsuario)
+
+    #Action code ends here
+    if "actor" in res:
+        if res['actor'] is None:
+            session.pop("actor", None)
+        else:
+            session['actor'] = res['actor']
+    return json.dumps(res)
+
+
+
 @chat.route('/chat/AgregMiembro', methods=['POST'])
 def AgregMiembro():
     #POST/PUT parameters
@@ -255,7 +289,7 @@ def VAdminContactos():
     #res['data2'] = [{'idContacto':56, 'nombre':'Grupo Est. Leng.', 'tipo':'grupo'},]
     res['data2'] = []
     for x in groups:
-        print("{} {}".format(user, x.miembros.all()))
+        #print("{} {}".format(user, x.miembros.all()))
         if user in x.miembros.all():
             res['data2'].append({'idContacto':x.id, 'nombre':x.nombre, 'tipo':'grupo'})
     
