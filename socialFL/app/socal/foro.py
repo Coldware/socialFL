@@ -188,21 +188,8 @@ def VForo():
       {'idMensaje':3, 'titulo':'Voy adelantado'}
     ]
     '''
-    
-    foro = Foro.query.get(idForo)
-    publicaciones = foro.publicacion
-    
-    res['data0'] = []
-    for publicacion in publicaciones:
-        #print(publicacion)
-        if publicacion.anterior==None:
-            res['data0'].append({'idMensaje':publicacion.id, 'titulo':publicacion.titulo})
-            publicaciones_hijas = publicacion.hijos
-            for hija in publicaciones_hijas:
-                #print(hija)
-                res['data0'].append({'idMensaje':hija.id, 'titulo':hija.titulo})
-
     session['idForo'] = res['idForo']
+    
     #Action code ends here
     return json.dumps(res)
 
@@ -218,7 +205,6 @@ def VForos():
     #Action code goes here, res should be a JSON structure
 
     foros = Foro.query.order_by(asc(Foro.timestamp)).all()
-
 
     res['data0'] = [
         {'idForo':foro.id, 'nombre':foro.titulo} for foro in foros
