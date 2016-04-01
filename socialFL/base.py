@@ -174,7 +174,7 @@ class Comentable(db.Model):
     __tablename__ = 'comentable'
     __mapper_args__ = {'polymorphic_identity': 'comentable'}
     id = db.Column(db.Integer, primary_key=True)
-    hilo = db.relationship('Hilo', backref="comentable", lazy='dynamic')
+    publicacion = db.relationship('Publicacion', backref=db.backref("comentable", enable_typechecks=False), lazy='dynamic')
 
 
 class Foro(Comentable):
@@ -209,21 +209,6 @@ class PaginaSitio(Comentable):
         return '<PAGINA SITIO --> url:{}>'.format(self.url)
 
 
-class Hilo(db.Model):
-    __tablename__ = 'hilo'
-    id = db.Column(db.Integer, primary_key=True)
-    titulo = db.Column(db.String(20), index=True)
-    publicacion = db.relationship('Publicacion', backref="hilo", lazy='dynamic')
-    comentable_id = db.Column(db.Integer, db.ForeignKey('comentable.id'))
-    
-    def __init__(self, titulo, publicacion_raiz):
-        self.titulo = titulo
-        self.publicacion.append(publicacion_raiz)
-    
-    def __repr__(self):
-        return '<HILO --> {}>'.format(self.titulo)
-
-
 class Publicacion(db.Model):
     __tablename__ = 'publicacion'
     id = db.Column(db.Integer, primary_key=True)
@@ -232,15 +217,15 @@ class Publicacion(db.Model):
     autor = db.Column(db.Integer)
     timestamp = db.Column(db.DateTime)
     anterior_id = db.Column(db.Integer, db.ForeignKey('publicacion.id'), index=True)
-    anterior = db.relationship('Publicacion', backref=db.backref('hijo', remote_side='Publicacion.id'))
-    hilo_id = db.Column(db.Integer, db.ForeignKey('hilo.id'))
+    hijos = db.relationship('Publicacion', backref=db.backref('anterior', remote_side='Publicacion.id'))
+    comentable_id = db.Column(db.Integer, db.ForeignKey('comentable.id'))
     
-    def __init__(self, titulo, contenido, autor, timestamp=None, anterior=None):
+    def __init__(self, titulo, contenido, autor, anterior=None, timestamp=None):
         self.titulo = titulo
         self.contenido = contenido
         self.autor = autor
         if anterior is not None:
-            self.anterior.append(anterior)
+            self.anterior = anterior
         if timestamp is None:
             self.timestamp = datetime.utcnow()
         else:
