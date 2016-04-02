@@ -1,9 +1,7 @@
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" 
-                    data-toggle="collapse" 
-                    data-target="#contenido-plegable">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#contenido-plegable">
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -12,28 +10,52 @@
         </div>
         <div class="collapse navbar-collapse" id="contenido-plegable">
             <ul class="nav navbar-nav navbar-left">
-<li><a ng-click="VComentariosPagina4(idPaginaSitio)">
-  <b>Comentarios</b></a></li>
-
+                <li><a ng-click="VComentariosPagina4(idPaginaSitio)"><b>Comentarios</b></a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-<li class="navbar-text" ng-show="usuario.nombre" ng-bind="usuario.nombre"></li>
-<li><a ng-click="APagina1(idPagina)"
-       ng-show="actor=='desarrollador' || actor=='duenoProducto' || actor=='maestroScrum' || false">
-    <b>Página de usuario</b></a></li>
-<li><a ng-click="VContactos2(idUsuario)"
-       ng-show="actor=='desarrollador' || actor=='duenoProducto' || actor=='maestroScrum' || false">
-    <b>Contactos</b></a></li>
-<li><a ng-click="VForos3(idUsuario)"
-       ng-show="actor=='desarrollador' || actor=='duenoProducto' || actor=='maestroScrum' || false">
-    <b>Foros</b></a></li>
-<li><a ng-click="VLogin0()"><i class="fa fa-power-off fa-lg" data-toggle="tooltip" title="Cerrar sesión"> </i></a></li>
-
+                <li class="navbar-text" ng-show="usuario.nombre" ng-bind="usuario.nombre"></li>
+                <li>
+                    <a ng-click="APagina1(idPagina)" ng-show="actor=='desarrollador' || actor=='duenoProducto' || actor=='maestroScrum' || false">
+                        <b>Página de usuario</b>
+                    </a>
+                </li>
+                <li>
+                    <a ng-click="VContactos2(idUsuario)" ng-show="actor=='desarrollador' || actor=='duenoProducto' || actor=='maestroScrum' || false">
+                        <b>Contactos</b>
+                    </a>
+                </li>
+                <li>
+                    <a ng-click="VForos3(idUsuario)" ng-show="actor=='desarrollador' || actor=='duenoProducto' || actor=='maestroScrum' || false">
+                        <b>Foros</b>
+                    </a>
+                </li>
+                <li>
+                    <a ng-click="VLogin0()"><i class="fa fa-power-off fa-lg" data-toggle="tooltip" title="Cerrar sesión"></i></a>
+                </li>
             </ul>
         </div>
     </div>
 </nav>
 
 
+<table ng-table="tableParams0" template-pagination="pager.html" class="table">
+    <tbody ng-repeat="row in $data">
+        <tr>
+            <td data-title="'Paginas de Sitio'" ng-show="row['idPagina']"><a ng-click="VPaginaSitio0(row['url'])">Visitar</a></td>              
+        </tr>
+    </tbody>
+</table>
 
-<div id="right"></div>
+<div class="container-fluid">
+    <p>COMENTARIOS:</p>
+    <br/>
+    <table ng-table="tableParams1" template-pagination="pager.html" class="table table-responsive">
+        <tbody>
+            <tr ng-repeat="row in $data">
+                <td data-title="'Título'" ng-bind-html="row['titulo']"></td>
+                <td data-title="'Autor'" ng-bind-html="row['autor']"></td>          
+                <td ng-show="row['contenido']"><a ng-click="VComentarioContenido(row['contenido'])">Ver Contenido</a></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

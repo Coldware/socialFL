@@ -197,7 +197,6 @@ def VForo():
             publicacion.imprimirhijos(res['data0'], 4)
                     
     session['idForo'] = res['idForo']
-    # <td data-title="'Contenido'" ng-bind-html="row['contenido']"></td>
     #Action code ends here
     return json.dumps(res)
 
@@ -231,7 +230,8 @@ def VPublicacion():
     if "actor" in session:
         res['actor']=session['actor']
     #Action code goes here, res should be a JSON structure
-
+    
+    print(idMensaje)
     res['idForo'] = session['idForo']
     session['idPublicacion'] = idMensaje
     #print(idMensaje)

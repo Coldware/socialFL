@@ -76,6 +76,8 @@ socialModule.controller('VForoController',
 
 
               var VPublicacion0Data = $scope.res.data0;
+              console.log('scope is', $scope)
+              console.log('object data is', object.data)
               if(typeof VPublicacion0Data === 'undefined') VPublicacion0Data=[];
               $scope.tableParams0 = new ngTableParams({
                   page: 1,            // show first page

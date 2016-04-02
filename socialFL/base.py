@@ -240,7 +240,7 @@ class Publicacion(db.Model):
             espacios = '&nbsp'*nivel
             titulo = espacios + hijo.titulo
             array.append({'idMensaje':hijo.id, 'titulo':titulo, 'contenido': hijo.contenido})
-            hijo.imprimirhijos(array,nivel + 4)
+            hijo.imprimirhijos(array, nivel+4)
         return array
 
 #Application code ends here

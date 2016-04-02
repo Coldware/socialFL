@@ -104,10 +104,8 @@ def VPrincipal():
         publicaciones = paginaSitio.publicacion    
         res['data0'] = []
         for publicacion in publicaciones:
-            #print(publicacion)
-            if publicacion.anterior==None:
-                res['data0'].append({'idMensaje':publicacion.id, 'titulo':publicacion.titulo, 'contenido':publicacion.contenido})
-                publicacion.imprimirhijos(res['data0'], 4)
+            autor = Usuario.query.get(publicacion.autor).login
+            res['data0'].append({'idMensaje':publicacion.id, 'titulo':publicacion.titulo, 'autor':autor, 'contenido':publicacion.contenido})
     except: 
         paginaSitio = PaginaSitio('/VPrincipal')
         try: #Se prueba el exito de la creacion de pagina
@@ -119,6 +117,8 @@ def VPrincipal():
             pass
         finally:
             db.session.close()
+    print(res['data0'])  
+    
     try:
         res['idPaginaSitio'] = paginaSitio.id 
     except:
@@ -153,8 +153,7 @@ def VPrincipal():
     res['data1'] = [
         {'idPagina':pag.id, 'url':pag.url} for pag in paginas
     ] 
-    print(res['data1'])   
-    
+    #print(res['data1'])
 
     #Action code ends here
     return json.dumps(res)
