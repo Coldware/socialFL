@@ -90,14 +90,20 @@ def APublicar():
     autor = session['idUsuario']
 
     if session['idPublicacion']!=0:
-        p_anterior = Publicacion.query.get(session['idPublicacion'])
-        publicacion = Publicacion(params['titulo'], params['contenido'], autor, p_anterior)
-        p_anterior.hijos.append(publicacion)
+        try:
+            p_anterior = Publicacion.query.get(session['idPublicacion'])
+            publicacion = Publicacion(params['titulo'], params['contenido'], autor, p_anterior)
+            p_anterior.hijos.append(publicacion)
+        except:
+            pass
     else:
-        publicacion = Publicacion(params['titulo'], params['contenido'], autor)
-        foro = Foro.query.get(session['idForo'])
-        foro.publicacion.append(publicacion)
-    
+        try:
+            publicacion = Publicacion(params['titulo'], params['contenido'], autor)
+            foro = Foro.query.get(session['idForo'])
+            foro.publicacion.append(publicacion)
+        except:
+            pass
+        
     try:
         db.session.add(publicacion)
         db.session.commit()
