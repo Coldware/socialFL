@@ -1,7 +1,6 @@
 from flask import request, session, Blueprint, json
-
 ident = Blueprint('ident', __name__)
-from base import db, Usuario , Pagina
+from base import db, Usuario , Pagina, PaginaSitio
 
 @ident.route('/ident/AIdentificar', methods=['POST'])
 def AIdentificar():
@@ -97,10 +96,66 @@ def VPrincipal():
             print ('SIN PAGINA')     
     else:
         print(session)    
+        
 
-    res['idPaginaSitio'] = 1
+    # Funcion de comentarios
+    try: #Busco si exite pagina sitio principal
+        paginaSitio = PaginaSitio.query.filter_by(url='/VPrincipal').first()
+        publicaciones = paginaSitio.publicacion    
+        res['data0'] = []
+        for publicacion in publicaciones:
+            #print(publicacion)
+            if publicacion.anterior==None:
+                res['data0'].append({'idMensaje':publicacion.id, 'titulo':publicacion.titulo, 'contenido':publicacion.contenido})
+                publicacion.imprimirhijos(res['data0'], 4)
+    except: 
+        paginaSitio = PaginaSitio('/VPrincipal')
+        try: #Se prueba el exito de la creacion de pagina
+            db.session.add(paginaSitio)
+            db.session.commit()
+            test = PaginaSitio.query.filter_by(url='/VPrincipal').first()
+            x = test.url #Si Test es None esto dara error e ira al except
+        except:
+            pass
+        finally:
+            db.session.close()
+    try:
+        res['idPaginaSitio'] = paginaSitio.id 
+    except:
+        res['idPaginaSitio'] = 1                
     session['idPaginaSitio'] = res['idPaginaSitio']
+
+    # Creacion de paginas de prueba
+    for i in range(3):
+        try: #Busco si exite
+            stringUrl = '/VPrueba' + str(i)
+            paginaSitio = PaginaSitio.query.filter_by(url=stringUrl).first()
+            test = PaginaSitio.query.filter_by(url=stringUrl).first()
+            x = test.url #Si Test es None esto dara error e ira al except
+        except: # Si no existe se crea
+            paginaSitio = PaginaSitio(stringUrl)
+            try: #Se prueba el exito de la creacion de pagina
+                db.session.add(paginaSitio)
+                db.session.commit()
+                test = PaginaSitio.query.filter_by(url=stringUrl).first()
+                x = test.url #Si Test es None esto dara error e ira al except
+            except:
+                pass
+            finally:
+                db.session.close()
+
+    # Funcion de otras paginas de sitios
+    res['data1'] = []
+    paginas = PaginaSitio.query.all()
+    paginaActual = PaginaSitio.query.filter_by(id=res['idPaginaSitio']).first()
+    paginas.remove(paginaActual) # Quitamos pagina actual de la lista
+
+    res['data1'] = [
+        {'idPagina':pag.id, 'url':pag.url} for pag in paginas
+    ] 
+    print(res['data1'])   
     
+
     #Action code ends here
     return json.dumps(res)
 
