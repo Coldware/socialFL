@@ -117,7 +117,7 @@ def VPrincipal():
             pass
         finally:
             db.session.close()
-    print(res['data0'])  
+    #print(res['data0'])  
     
     try:
         res['idPaginaSitio'] = paginaSitio.id 

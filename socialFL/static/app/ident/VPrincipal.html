@@ -1,3 +1,56 @@
+<head>
+    <style type="text/css">
+        #comentarios {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #d7d7d7;
+            
+        }
+        
+        #paginassitio {
+            margin-top: 15px;
+            padding-top: 15px;
+            
+        }
+        
+        #paginassitio article {
+            display: table;
+            padding: 22px;
+        }
+        
+        #comentarios article {
+            display: table;
+            padding: 22px;
+        }
+        
+        section#comentarios article {
+            padding: 21px;
+            border: 1px solid #d7d7d7;
+            border-radius: 11px;
+        }
+        
+        
+        #comentarios article header {
+            display: table-cell;
+            width: 100px;
+            padding-right: 22px;
+            
+        }
+        
+        #comentarios article header p {
+            display: block;
+            font-weight: bold;
+            color: #000;
+            
+        }
+        
+        #comentarios article p {
+            padding: 0;
+            
+        }
+    </style>
+</head>
+
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -10,7 +63,7 @@
         </div>
         <div class="collapse navbar-collapse" id="contenido-plegable">
             <ul class="nav navbar-nav navbar-left">
-                <li><a ng-click="VComentariosPagina4(idPaginaSitio)"><b>Comentarios</b></a></li>
+                <li><a ng-click="VComentariosPagina4(idPaginaSitio)"><b>Comentar</b></a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="navbar-text" ng-show="usuario.nombre" ng-bind="usuario.nombre"></li>
@@ -37,25 +90,26 @@
     </div>
 </nav>
 
+<section id="paginassitio">
+    <header>
+        <h3>Paginas de Sitio</h3>
+    </header>
+    <article ng-repeat="row in data1">
+        <a ng-show="row['idPagina']" ng-click="VPaginaSitio0(row['url'])">Visitar</a>
+    </article>
+</section>
 
-<table ng-table="tableParams0" template-pagination="pager.html" class="table">
-    <tbody ng-repeat="row in $data">
-        <tr>
-            <td data-title="'Paginas de Sitio'" ng-show="row['idPagina']"><a ng-click="VPaginaSitio0(row['url'])">Visitar</a></td>              
-        </tr>
-    </tbody>
-</table>
+<br/>
+<br/>
 
-<div class="container-fluid">
-    <p>COMENTARIOS:</p>
-    <br/>
-    <table ng-table="tableParams1" template-pagination="pager.html" class="table table-responsive">
-        <tbody>
-            <tr ng-repeat="row in $data">
-                <td data-title="'Título'" ng-bind-html="row['titulo']"></td>
-                <td data-title="'Autor'" ng-bind-html="row['autor']"></td>          
-                <td ng-show="row['contenido']"><a ng-click="VComentarioContenido(row['contenido'])">Ver Contenido</a></td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+<section id="comentarios">
+    <header>
+        <h3>Comentarios</h3>
+    </header>
+    <article ng-repeat="row in data0">
+        <header>
+            <p>{{row.autor}}</p>
+        </header>
+        <p>{{row.contenido}}</p>
+    </article>
+</section>
