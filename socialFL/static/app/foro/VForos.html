@@ -27,7 +27,7 @@
     </div>
 </nav>
 
-        <table ng-table="tableParams0" template-pagination="pager.html" class="table">
+        <table ng-table="tablaParams0" template-pagination="pager.html" class="table">
             <tr ng-repeat="row in $data">
                 <td data-title="'Nombre'" ng-bind="row['nombre']"></td>
                 <td ng-show="row['idForo']"><a ng-show="actor=='desarrollador' || actor=='duenoProducto' || actor=='maestroScrum' || false" ng-click="VForo0(row['idForo'])">Seleccionar</a></td>

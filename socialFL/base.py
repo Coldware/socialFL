@@ -241,6 +241,16 @@ class Publicacion(db.Model):
             hijo.imprimirhijos(array)
         return array
 
+    def imprimirhijosIdent(self, array, nivel):
+        for hijo in self.hijos:
+            espacios = ''
+            for x in range(nivel):
+                espacios = espacios + '&nbsp' 
+            strTitulo = espacios + hijo.titulo
+            strContenido = espacios + hijo.contenido
+            array.append({'idMensaje':hijo.id, 'titulo':strTitulo, 'contenido': strContenido})
+            hijo.imprimirhijosIdent(array,nivel + 8)
+        return array
 
 #Application code ends here
 
