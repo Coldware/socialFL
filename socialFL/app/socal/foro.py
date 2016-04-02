@@ -90,19 +90,13 @@ def APublicar():
     autor = session['idUsuario']
 
     if session['idPublicacion']!=0:
-        try:
-            p_anterior = Publicacion.query.get(session['idPublicacion'])
-            publicacion = Publicacion(params['titulo'], params['contenido'], autor, p_anterior)
-            p_anterior.hijos.append(publicacion)
-        except:
-            pass
+        p_anterior = Publicacion.query.get(session['idPublicacion'])
+        publicacion = Publicacion(params['titulo'], params['contenido'], autor, p_anterior)
+        p_anterior.hijos.append(publicacion)
     else:
-        try:
-            publicacion = Publicacion(params['titulo'], params['contenido'], autor)
-            foro = Foro.query.get(session['idForo'])
-            foro.publicacion.append(publicacion)
-        except:
-            pass
+        publicacion = Publicacion(params['titulo'], params['contenido'], autor)
+        foro = Foro.query.get(session['idForo'])
+        foro.publicacion.append(publicacion)
         
     try:
         db.session.add(publicacion)
@@ -200,7 +194,7 @@ def VForo():
         #print(publicacion)
         if publicacion.anterior==None:
             res['data0'].append({'idMensaje':publicacion.id, 'titulo':publicacion.titulo, 'contenido':publicacion.contenido})
-            publicacion.imprimirhijosIdent(res['data0'],8)
+            publicacion.imprimirhijos(res['data0'], 4)
                     
     session['idForo'] = res['idForo']
     # <td data-title="'Contenido'" ng-bind-html="row['contenido']"></td>

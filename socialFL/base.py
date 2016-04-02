@@ -235,21 +235,12 @@ class Publicacion(db.Model):
         return '<PUBLICACION --> titulo:{} autor:{}>'.format(self.titulo, 
         Usuario.query.get(self.autor).login)
     
-    def imprimirhijos(self, array):
+    def imprimirhijos(self, array, nivel):
         for hijo in self.hijos:
-            array.append({'idMensaje':hijo.id, 'titulo':hijo.titulo})
-            hijo.imprimirhijos(array)
-        return array
-
-    def imprimirhijosIdent(self, array, nivel):
-        for hijo in self.hijos:
-            espacios = ''
-            for x in range(nivel):
-                espacios = espacios + '&nbsp' 
-            strTitulo = espacios + hijo.titulo
-            strContenido = espacios + hijo.contenido
-            array.append({'idMensaje':hijo.id, 'titulo':strTitulo, 'contenido': strContenido})
-            hijo.imprimirhijosIdent(array,nivel + 8)
+            espacios = '&nbsp'*nivel
+            titulo = espacios + hijo.titulo
+            array.append({'idMensaje':hijo.id, 'titulo':titulo, 'contenido': hijo.contenido})
+            hijo.imprimirhijos(array,nivel + 4)
         return array
 
 #Application code ends here
