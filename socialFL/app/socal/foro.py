@@ -193,11 +193,11 @@ def VForo():
     for publicacion in publicaciones:
         #print(publicacion)
         if publicacion.anterior==None:
-            res['data0'].append({'idMensaje':publicacion.id, 'titulo':publicacion.titulo})
-            publicacion.imprimirhijos(res['data0'])
+            res['data0'].append({'idMensaje':publicacion.id, 'titulo':publicacion.titulo, 'contenido':publicacion.contenido})
+            publicacion.imprimirhijosIdent(res['data0'],8)
                     
     session['idForo'] = res['idForo']
-    
+    # <td data-title="'Contenido'" ng-bind-html="row['contenido']"></td>
     #Action code ends here
     return json.dumps(res)
 

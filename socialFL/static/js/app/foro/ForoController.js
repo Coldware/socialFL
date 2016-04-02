@@ -111,7 +111,13 @@ socialModule.controller('VForoController',
       $scope.VPublicacion0 = function(idMensaje) {
         $location.path('/VPublicacion/'+((typeof idMensaje === 'object')?JSON.stringify(idMensaje):idMensaje));
       };
-
+      $scope.VPublicacionContenido = function(contenido) {
+        string = '<div class="ngdialog-message">' + ((typeof contenido === 'object')?JSON.stringify(contenido):contenido) + '</div>';
+        ngDialog.open({ scope: $scope, template:  string,
+              plain: 'true',
+        showClose: true, closeByDocument: true, closeByEscape: true});
+      };
+      
 $scope.__ayuda = function() {
 ngDialog.open({ template: 'ayuda_VForo.html',
         showClose: true, closeByDocument: true, closeByEscape: true});
@@ -135,7 +141,7 @@ socialModule.controller('VForosController',
 
               var VForo0Data = $scope.res.data0;
               if(typeof VForo0Data === 'undefined') VForo0Data=[];
-              $scope.tableParams0 = new ngTableParams({
+              $scope.tablaParams0 = new ngTableParams({
                   page: 1,            // show first page
                   count: 10           // count per page
               }, {
