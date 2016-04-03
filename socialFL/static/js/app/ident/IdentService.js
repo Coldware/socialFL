@@ -25,7 +25,7 @@ socialModule.service('identService', ['$q', '$http', function($q, $http) {
     //    deferred.resolve(res);
     //    return deferred.promise;
     };
-
+    
     this.VLogin = function(args) {
         if(typeof args == 'undefined') args={};
         return $http({

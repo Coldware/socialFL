@@ -201,12 +201,17 @@ class PaginaSitio(Comentable):
     __tablename__ = 'paginasitio'
     id = db.Column(db.Integer, db.ForeignKey('comentable.id'), primary_key=True)
     url = db.Column(db.String(30), index=True, unique=True)
+    titulo = db.Column(db.String(20), index=True, unique=True)
+    contenido = db.Column(db.Text)
     
-    def __init__(self, url=None):
+    def __init__(self, titulo, contenido, url=None):
+        self.titulo = titulo
+        self.contenido = contenido
         self.url = url
+        
     
     def __repr__(self):
-        return '<PAGINA SITIO --> url:{}>'.format(self.url)
+        return '<PAGINA SITIO --> titulo:{}>'.format(self.titulo)
 
 
 class Publicacion(db.Model):

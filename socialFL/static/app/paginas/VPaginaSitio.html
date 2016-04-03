@@ -10,18 +10,14 @@
         </div>
         <div class="collapse navbar-collapse" id="contenido-plegable">
             <ul class="nav navbar-nav navbar-left">
-                <li><a ng-click="VPagina2(idUsuario)" ng-show="actor=='desarrollador' || actor=='duenoProducto' || actor=='maestroScrum' || false">
-                        <b>Modificar</b>
+                <li>
+                    <a ng-click="VComentariosPagina0(idSitio)">
+                        <b>Comentar</b>
                     </a>
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="navbar-text" ng-show="usuario.nombre" ng-bind="usuario.nombre"></li>
-                <li>
-                    <a ng-click="__ayuda()">
-                        <i class="fa fa-info-circle fa-lg" data-toggle="tooltip" title="Informacion"></i>
-                    </a>
-                </li>
                 <li>
                     <a ng-click="VPrincipal1()" ng-show="actor=='desarrollador' || actor=='duenoProducto' || actor=='maestroScrum' || false">
                         <i class="fa fa-arrow-circle-left fa-lg" data-toggle="tooltip" title="Regresar"></i>
@@ -40,13 +36,14 @@
 
 <div ng-bind-html="contenido"></div>
 
-
-<div id="right"></div><script type="text/ng-template" id="ayuda_VMiPagina.html">
-<div style="text-align: center;">Para modificar la información de su página debe 
-posicionarse en el botón de modificar.<br/></div>
-<p><b>Botones</b></p>
-<p><b>Regresar</b>: Redirecciona a la página anterior.</p>
-<p><b>Salir</b>: Cierra sesión de usuario.</p>
-<div ng-bind-html="contenido"></div>
-
-</script>
+<section id="comentarios">
+    <header>
+        <h4>Comentarios</h4>
+    </header>
+    <article ng-repeat="row in data0">
+        <header>
+            <p>{{row.autor}}</p>
+        </header>
+        <p>{{row.contenido}}</p>
+    </article>
+</section>

@@ -61,7 +61,6 @@ def ARegistrar():
 
 
 
-
 @ident.route('/ident/VLogin')
 def VLogin():
     res = {}
@@ -79,8 +78,8 @@ def VLogin():
 @ident.route('/ident/VPrincipal')
 def VPrincipal():
     res = {}
-    if 'idPaginaSitio' in session:
-        del session['idPaginaSitio']
+    if 'idSitio' in session:
+        del session['idSitio']
     if "actor" in session:
         res['actor']=session['actor']
         res['idPagina'] = 'Sin Pagina'
@@ -107,7 +106,7 @@ def VPrincipal():
             autor = Usuario.query.get(publicacion.autor).login
             res['data0'].append({'idMensaje':publicacion.id, 'titulo':publicacion.titulo, 'autor':autor, 'contenido':publicacion.contenido})
     except: 
-        paginaSitio = PaginaSitio('/VPrincipal')
+        paginaSitio = PaginaSitio('Principal', 'Contenido', '/VPrincipal')
         try: #Se prueba el exito de la creacion de pagina
             db.session.add(paginaSitio)
             db.session.commit()
@@ -123,41 +122,22 @@ def VPrincipal():
         res['idPaginaSitio'] = paginaSitio.id 
     except:
         res['idPaginaSitio'] = 1                
-    session['idPaginaSitio'] = res['idPaginaSitio']
-
-    # Creacion de paginas de prueba
-    for i in range(3):
-        try: #Busco si exite
-            stringUrl = '/VPrueba' + str(i)
-            paginaSitio = PaginaSitio.query.filter_by(url=stringUrl).first()
-            test = PaginaSitio.query.filter_by(url=stringUrl).first()
-            x = test.url #Si Test es None esto dara error e ira al except
-        except: # Si no existe se crea
-            paginaSitio = PaginaSitio(stringUrl)
-            try: #Se prueba el exito de la creacion de pagina
-                db.session.add(paginaSitio)
-                db.session.commit()
-                test = PaginaSitio.query.filter_by(url=stringUrl).first()
-                x = test.url #Si Test es None esto dara error e ira al except
-            except:
-                pass
-            finally:
-                db.session.close()
+    session['idSitio'] = res['idPaginaSitio']
 
     # Funcion de otras paginas de sitios
     res['data1'] = []
-    paginas = PaginaSitio.query.all()
+    sitios = PaginaSitio.query.all()
     paginaActual = PaginaSitio.query.filter_by(id=res['idPaginaSitio']).first()
-    paginas.remove(paginaActual) # Quitamos pagina actual de la lista
+    sitios.remove(paginaActual) # Quitamos pagina actual de la lista
 
     res['data1'] = [
-        {'idPagina':pag.id, 'url':pag.url} for pag in paginas
-    ] 
-    #print(res['data1'])
+        {'idSitio':sitio.id, 'url':sitio.url, 'titulo':sitio.titulo} for sitio in sitios
+    ]
+    
+    #print(session)
 
     #Action code ends here
     return json.dumps(res)
-
 
 
 

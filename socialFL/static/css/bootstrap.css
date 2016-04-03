@@ -5,6 +5,56 @@
  */
 
 /*! normalize.css v3.0.2 | MIT License | git.io/normalize */
+
+#comentarios {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #d7d7d7;
+            
+}
+        
+#paginassitio {
+            margin-top: 15px;
+            padding-top: 15px;
+            
+}
+        
+#paginassitio article {
+            display: table;
+            padding: 22px;
+}
+        
+#comentarios article {
+            display: table;
+            padding: 22px;
+}
+        
+section#comentarios article {
+            padding: 21px;
+            border: 1px solid #d7d7d7;
+            border-radius: 11px;
+}
+        
+        
+#comentarios article header {
+            display: table-cell;
+            width: 100px;
+            padding-right: 22px;
+            
+}
+        
+#comentarios article header p {
+            display: block;
+            font-weight: bold;
+            color: #000;
+            
+}
+        
+#comentarios article p {
+            padding: 0;
+            
+}
+
 html {
   font-family: sans-serif;
   -webkit-text-size-adjust: 100%;

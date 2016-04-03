@@ -83,8 +83,11 @@ socialModule.controller('VPrincipalController',
       $scope.VComentariosPagina4 = function(idPaginaSitio) {
         $location.path('/VComentariosPagina/'+idPaginaSitio);
       };
-      $scope.VPaginaSitio0 = function(PaginaSitio) {
-        $location.path(PaginaSitio);
+      $scope.VCrearSitio = function() {
+        $location.path('/VCrearSitio');
+      };
+      $scope.VPaginaSitio0 = function(idSitio) {
+        $location.path('/VPaginaSitio/'+idSitio);
       };
 
     }]);

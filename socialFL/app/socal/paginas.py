@@ -1,7 +1,34 @@
 from flask import request, session, Blueprint, json
 
 paginas = Blueprint('paginas', __name__)
-from base import db, Pagina, Usuario
+from base import db, Pagina, Usuario, PaginaSitio
+
+@paginas.route('/paginas/ACrearSitio', methods=['POST'])
+def ACrearSitio():
+    #POST/PUT parameters
+    params = request.get_json()
+    results = [{'label':'/VCrearSitio', 'msg':['Cambios almacenados']}, {'label':'/VCrearSitio', 'msg':['Error al crear sitio']}]
+    res = results[0]
+    #Action code goes here, res should be a list with a label and a message
+
+    try:
+        sitio = PaginaSitio(params["titulo"], params["contenido"])
+        db.session.add(sitio)
+        db.session.commit()
+    except:
+        res = results[1]
+    finally:
+        db.session.close()
+
+    #Action code ends here
+    if "actor" in res:
+        if res['actor'] is None:
+            session.pop("actor", None)
+        else:
+            session['actor'] = res['actor']
+    return json.dumps(res)
+
+
 
 @paginas.route('/paginas/AModificarPagina', methods=['POST'])
 def AModificarPagina():
@@ -121,6 +148,59 @@ def VPagina():
 
 
 
+@paginas.route('/paginas/VCrearSitio')
+def VCrearSitio():
+    #GET parameter
+    res = {}
+    if "actor" in session:
+        res['actor']=session['actor']
+    #Action code goes here, res should be a JSON structure
+
+    try: #Busco si tiene pagina
+        sitio = PaginaSitio.query.get(23)
+        res['titulo'] = sitio.titulo   #Devolvemos titulo y contenido
+        res['contenido'] = sitio.contenido
+    except: # Si no encontramos pagina colocamos datos por defecto
+        res['titulo'] = 'Sin Pagina'
+        res['contenido'] = 'Sin Pagina'
+
+    #Action code ends here
+    return json.dumps(res)
+
+
+
+@paginas.route('/paginas/VPaginaSitio')
+def VPaginaSitio():
+    #GET parameter
+    idSitio = request.args['idSitio']
+    res = {}
+    if "actor" in session:
+        res['actor']=session['actor']
+    res['idSitio'] = idSitio
+    session['idSitio'] = idSitio
+    
+    #Action code goes here, res should be a JSON structure
+    try: #Busco si tiene pagina
+        sitio = PaginaSitio.query.get(idSitio)
+        res['titulo'] = sitio.titulo   #Devolvemos titulo y contenido
+        res['contenido'] = sitio.contenido
+    except: # Si no encontramos pagina colocamos datos por defecto
+        res['titulo'] = "NO PAGE"
+        res['contenido'] = ""
+    
+    res['data0'] = []
+    # Funcion de comentarios
+    try:
+        comentarios = sitio.publicacion    
+        for comentario in comentarios:
+            autor = Usuario.query.get(comentario.autor).login
+            res['data0'].append({'idMensaje':comentario.id, 'titulo':comentario.titulo, 'autor':autor, 'contenido':comentario.contenido})
+    except: 
+        pass
+    #print(res['data0'])  
+
+    #Action code ends here
+    return json.dumps(res)
 
 
 #Use case code starts here

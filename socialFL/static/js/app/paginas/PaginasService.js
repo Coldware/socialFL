@@ -12,6 +12,18 @@ socialModule.service('paginasService', ['$q', '$http', function($q, $http) {
     //    deferred.resolve(res);
     //    return deferred.promise;
     };
+    this.ACrearSitio = function(fPagina) {
+        return  $http({
+          url: "paginas/ACrearSitio",
+          data: fPagina,
+          method: 'POST',
+        });
+    //    var labels = ["/VPagina", ];
+    //    var res = labels[0];
+    //    var deferred = $q.defer();
+    //    deferred.resolve(res);
+    //    return deferred.promise;
+    };
 
     this.APagina = function(args) {
         if(typeof args == 'undefined') args={};
@@ -43,6 +55,32 @@ socialModule.service('paginasService', ['$q', '$http', function($q, $http) {
         if(typeof args == 'undefined') args={};
         return $http({
           url: 'paginas/VPagina',
+          method: 'GET',
+          params: args
+        });
+    //    var res = {};
+    //    var deferred = $q.defer();
+    //    deferred.resolve(res);
+    //    return deferred.promise;
+    };
+    
+    this.VCrearSitio = function(args) {
+        if(typeof args == 'undefined') args={};
+        return $http({
+          url: 'paginas/VCrearSitio',
+          method: 'GET',
+          params: args
+        });
+    //    var res = {};
+    //    var deferred = $q.defer();
+    //    deferred.resolve(res);
+    //    return deferred.promise;
+    };
+    
+    this.VPaginaSitio = function(args) {
+        if(typeof args == 'undefined') args={};
+        return $http({
+          url: 'paginas/VPaginaSitio',
           method: 'GET',
           params: args
         });

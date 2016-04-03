@@ -9,7 +9,7 @@ from base import db, Usuario, Foro, Publicacion, PaginaSitio
 def AComentar():
     #POST/PUT parameters
     params = request.get_json()
-    results = [{'label':'/VPrincipal', 'msg':['Comentario realizado']}, {'label':'/VComentariosPagina', 'msg':['Error al realizar comentario']}, ]
+    results = [{'label':'/VPrincipal', 'msg':['Comentario realizado']}, {'label':'/VComentariosPagina', 'msg':['Error al realizar comentario']}, {'label':'/VPaginaSitio', 'msg':['Comentario realizado']}]
     res = results[0]
     #Action code goes here, res should be a list with a label and a message
 
@@ -17,13 +17,16 @@ def AComentar():
     
     try:
         comentario = Publicacion(params['titulo'], params['contenido'], autor)
-        paginasitio = PaginaSitio.query.get(session['idPaginaSitio'])
-        paginasitio.publicacion.append(comentario)
+        sitio = PaginaSitio.query.get(session['idSitio'])
+        if sitio.url!='/VPrincipal':
+            res = results[2]
+            res['label'] = res['label'] + '/' + str(session['idSitio'])
+        sitio.publicacion.append(comentario)
         db.session.add(comentario)
         db.session.commit()
     except:
         res = results[1]
-        res['label'] = res['label'] + '/' + str(session['idPaginaSitio'])
+        res['label'] = res['label'] + '/' + str(session['idSitio'])
     finally:
         db.session.close()
 

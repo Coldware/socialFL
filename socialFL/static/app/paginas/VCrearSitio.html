@@ -7,18 +7,11 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <span class="navbar-brand" ><i class="fa fa-user"></i><b> Página de usuario</b></span>
+            <span class="navbar-brand" ><i class="fa fa-user"></i><b> Página de Sitio</b></span>
         </div>
         <div class="collapse navbar-collapse" id="contenido-plegable">
-            <ul class="nav navbar-nav navbar-left">
-            </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="navbar-text" ng-show="usuario.nombre" ng-bind="usuario.nombre"></li>
-                <li>
-                    <a ng-click="__ayuda()">
-                        <i class="fa fa-info-circle fa-lg" data-toggle="tooltip" title="Información"></i>
-                    </a>
-                </li>
                 <li>
                     <a ng-click="VPrincipal1()" ng-show="actor=='desarrollador' || actor=='duenoProducto' || actor=='maestroScrum' || false">
                         <i class="fa fa-arrow-circle-left fa-lg" data-toggle="tooltip" title="Regresar"></i>
@@ -34,7 +27,7 @@
     </div>
 </nav>
 
-<form name="fPaginaForm" ng-submit="AModificarPagina0(fPaginaForm.$valid)" novalidate>
+<form name="fPaginaForm" ng-submit="ACrearSitio0(fPaginaForm.$valid)" novalidate>
     <div class="form-group" ng-class="{ 'has-error' :  fPaginaSubmitted && fPaginaForm.titulo.$invalid && fPaginaForm.titulo.$pristine && fPaginaSubmitted}">
         <label for="fPagina_titulo">Título</label>
         <input id="fPagina_titulo" type="text" name="titulo" class="form-control" ng-model="fPagina.titulo" placeholder="Título" required ng-minlength="5"/>
@@ -46,23 +39,7 @@
         <p ng-show="fPaginaSubmitted && fPaginaForm.contenido.$invalid" class="help-block">Error en campo Contenido.</p>
     </div>
     <button type="submit" class="btn btn-perso btn-lg btn-block">
-        <i class="fa fa-asterisk"></i>Modificar
+        <i class="fa fa-asterisk"></i>Crear
     </button>
 </form>
 <hr />
-
-
-<div id="right"></div><script type="text/ng-template" id="ayuda_VPagina.html">
-<div><p>Modificación del título y el contenido de la página de usuario.</p>
-<p>Escriba el título de la página en el espacio asignado.</p>
-<p>Escriba el contenido de su página y ajuste el formato que desea mostrar.</p>
-<p>El contenido puede personalizarse con los siguientes botones: </p>
-<p><b> H1 - H6:</b> Cambia el tamaño del contenido.</p>
-<p><b> P: </b> Da formato de párrafo al contenido.</p>
-<p><b> ":</b> Da formato de cita al contenido.</p>
-<p><b> B:</b> Coloca en negrita el contenido.</p>
-<p><b> I:</b> Coloca en cursiva el contenido.</p>
-<p><b><u> U</u>:</b> Subraya el contenido.</p>
-<p> Además se pueden realizar enumeraciones, viñetas, deshacer cambios, alinear texto y anexar archivos usando los respectivos botones.</p>
-</div>
-</script>
